@@ -1,3 +1,6 @@
 kinova_feedback:
   alpha_torque : 0.05
   alpha_dq : 0.05
+
+dingo_feedback:
+  vicon_used : false

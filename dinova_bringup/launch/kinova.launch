@@ -12,6 +12,5 @@
 
     <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
     <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
-    <node name="dinova_state_publisher" pkg="dinova_control" type="dinova_state_publisher.py" args="" output="screen"/>
 
 </launch>
