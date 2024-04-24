@@ -38,6 +38,13 @@ class DinovaStatePublisher():
                 js_msg.position.append(self.kinova_act_state.position[i])
                 js_msg.velocity.append(self.kinova_act_state.velocity[i])
                 js_msg.effort.append(self.kinova_act_state.effort[i])
+            # Gripper state
+            name = "right_finger_bottom_joint"
+            js_msg.name.append(name)
+            js_msg.position.append(self.kinova_act_state.position[-1])
+            js_msg.velocity.append(self.kinova_act_state.velocity[-1])
+            js_msg.effort.append(self.kinova_act_state.effort[-1])
+            
             self.pub_dinova_state.publish(js_msg)
 
     def callback_kinova_state(self, msg):

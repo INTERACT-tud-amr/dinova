@@ -96,6 +96,8 @@ class KinovaRobot():
             torque_new = self.get_torque(n)
             self.state.kinova_feedback.torque[n] = self.alpha_torque*torque_new + (1- self.alpha_torque)*self.torque_old[n]
             self.torque_old[n] = torque_new
+            # Read gripper pos
+            self.state.kinova_feedback.gripper = self.get_gripper_position()
             # Read error
             self.state.kinova_feedback.fault[n] = self.feedback.actuators[n].fault_bank_a
 

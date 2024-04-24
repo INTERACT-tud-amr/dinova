@@ -91,6 +91,13 @@ class ControlInterface():
             js_msg.position.append(self.state.kinova_feedback.q[i])
             js_msg.velocity.append(self.state.kinova_feedback.dq[i])
             js_msg.effort.append(self.state.kinova_feedback.torque[i])
+        # Gripper state
+        name = "right_finger_bottom_joint"
+        js_msg.name.append(name)
+        js_msg.position.append(self.state.kinova_feedback.gripper)
+        js_msg.velocity.append(0.0)
+        js_msg.effort.append(0.0)
+
         self.pub_feedback.publish(js_msg)
 
     def stop_threads(self):

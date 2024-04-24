@@ -15,6 +15,7 @@ class JointData:
         self.dq = np.zeros(self.n)
         self.torque = np.zeros(self.n)
         self.fault = np.zeros(self.n)
+        self.gripper = 0.0
 
 
 class State:
