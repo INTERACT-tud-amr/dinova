@@ -6,9 +6,9 @@ import time
 import sys
 import numpy as np
 
-from kinova_ros_interface.kinova_client import KinovaRobot
-from kinova_ros_interface.utilities import DeviceConnection
-from kinova_ros_interface.state import State
+from dinova_control.kinova_client import KinovaRobot
+from dinova_control.utilities import DeviceConnection
+from dinova_control.state import State
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray, Float64, Bool, Int32, Empty
