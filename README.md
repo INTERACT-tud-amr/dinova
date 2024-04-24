@@ -4,7 +4,7 @@ ROS software stack for Dinova (dingo + kinova).
 ## Running a real robot
 Turn off default ros packages by Clearpath
 ``` bash
-sudo systemctl stop ros.service
+    sudo systemctl stop ros.service
 ```
 To launch the control interface for Dinova: 
 ``` bash
