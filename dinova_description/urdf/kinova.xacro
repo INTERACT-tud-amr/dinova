@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<robot name="kinova" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="arm_id" default="" />
+    <xacro:arg name="load_gripper" default="true"/>
+
+    <!-- Add kinova -->
+    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
+    <xacro:kinova prefix="$(arg arm_id)"/>
+
+    <!-- Add kinova gripper -->
+    <xacro:if value="$(arg load_gripper)">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova_gripper_macro.xacro"/>
+        <xacro:kinova_gripper prefix="$(arg arm_id)"/>
+
+        <joint name="$(arg arm_id)arm_gripper_base_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="$(arg arm_id)dummy_link"/>
+            <child link="$(arg arm_id)gripper_base_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+    </xacro:if>
+
+
+
+    <!-- Create world joint -->
+    <link name="world"/>
+    <joint name="$(arg arm_id)arm_mount_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="world"/>
+        <child link="$(arg arm_id)kinova_base_link"/>
+    </joint>
+
+  
+
+
+</robot>
