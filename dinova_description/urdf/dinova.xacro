@@ -8,10 +8,17 @@
     <xacro:if value="$(arg dingo_real_urdf)">
         <xacro:include filename="$(find dinova_description)/urdf/real_dingo-o.urdf.xacro" />
     </xacro:if>
-    <xacro:if value="$(not arg dingo_real_urdf)">
-        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo_omni.xacro'
-                                                dingo_id:=$(arg robot_id)"/>
-    </xacro:if>
+    <xacro:unless value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/dingo_omni_macro.xacro"/>
+        <xacro:dingo_omni prefix="$(arg robot_id)"/>
+        
+        <link name="world"/>
+        <joint name="$(arg robot_id)world_link" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="world"/>
+            <child link="$(arg robot_id)base_link"/>
+        </joint>
+    </xacro:unless>
 
 
     <!-- Add kinova -->

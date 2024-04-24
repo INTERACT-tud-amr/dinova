@@ -7,11 +7,11 @@
     <arg name="lidar" default="false" />
 
 
-    <group if="$(eval arg('dingo_real_urdf') == 'true')">
+    <group if="$(eval arg('dingo_real_urdf'))">
         <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro'
                                             "/>       
     </group>
-    <group if="$(eval arg('dingo_real_urdf') == 'false')">
+    <group if="$(eval not arg('dingo_real_urdf'))">
         <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo_omni.xacro'
                                                 dingo_id:=$(arg dingo_id)
                                                 lidar:=$(arg dingo_id)"/>

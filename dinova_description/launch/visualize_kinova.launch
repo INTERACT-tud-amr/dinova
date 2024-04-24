@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="arm_id" default="" />
-    <arg name="load_gripper" default="false" />
+    <arg name="load_gripper" default="true" />
 
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_description)/urdf/kinova.xacro'
             arm_id:=$(arg arm_id)

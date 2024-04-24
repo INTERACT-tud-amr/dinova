@@ -84,14 +84,14 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://dingo_kinova_description/urdf/meshes/base/omni_chassis.dae"/>
+                <mesh filename="package://dinova_description/urdf/meshes/base/omni_chassis.dae"/>
             </geometry>
             <material name="dark_grey"/>
         </visual>
         <collision>
             <origin xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://dingo_kinova_description/urdf/meshes/base/omni_chassis_collision.stl"/>
+                <mesh filename="package://dinova_description/urdf/meshes/base/omni_chassis_collision.stl"/>
             </geometry>
         </collision>
         <inertial>

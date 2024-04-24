@@ -130,31 +130,31 @@
         <limit lower="-0.09" upper="0.96" effort="1000" velocity="0.6" />
     </joint>
     <!-- right_finger_tip_joint -->
-    <joint name="${prefix}right_finger_tip_joint" type="revolute">
+    <joint name="${prefix}right_finger_tip_joint" type="fixed">
         <origin xyz="-0.045636 0.020423 0" rpy="0 0 0" />
         <parent link="${prefix}right_finger_prox_link" />
         <child link="${prefix}right_finger_dist_link" />
         <axis xyz="0 0 1" />
-        <limit lower="-0.50" upper="0.21" effort="1000" velocity="1000" /> <!--limit lower="-1.03" upper="0.21" effort="1000" velocity="1000" /-->
-        <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-0.676" offset="0.149" />
+        <!-- <limit lower="-0.50" upper="0.21" effort="1000" velocity="1000" />  -->
+        <!-- <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-0.676" offset="0.149" /> -->
     </joint>
     <!-- left_finger_bottom_joint  -->
-    <joint name="${prefix}left_finger_bottom_joint" type="revolute">
+    <joint name="${prefix}left_finger_bottom_joint" type="fixed">
         <origin xyz="0 0.0305 0.070003" rpy="0 1.5708 0" />
         <parent link="${prefix}gripper_base_link" />
         <child link="${prefix}left_finger_prox_link" />
         <axis xyz="0 0 1" />
-        <limit lower="-0.96" upper="0.09" effort="1000" velocity="1000" />
-        <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-1.0" offset="0.0" />
+        <!-- <limit lower="-0.96" upper="0.09" effort="1000" velocity="1000" /> -->
+        <!-- <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-1.0" offset="0.0" /> -->
     </joint>
     <!-- left_finger_tip_joint -->
-    <joint name="${prefix}left_finger_tip_joint" type="revolute">
+    <joint name="${prefix}left_finger_tip_joint" type="fixed">
         <origin xyz="-0.045636 -0.020423 6.9901E-05" rpy="0 0 0" />
         <parent link="${prefix}left_finger_prox_link" />
         <child link="${prefix}left_finger_dist_link" />
         <axis xyz="0 0 -1" />
-        <limit lower="-0.50" upper="0.21" effort="1000" velocity="1000" /> <!--limit lower="-1.03" upper="0.21" effort="1000" velocity="1000" /-->
-        <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-0.676" offset="0.149" />
+        <!-- <limit lower="-0.50" upper="0.21" effort="1000" velocity="1000" />  -->
+        <!-- <mimic joint="${prefix}right_finger_bottom_joint" multiplier="-0.676" offset="0.149" /> -->
     </joint>
 
 </xacro:macro>
