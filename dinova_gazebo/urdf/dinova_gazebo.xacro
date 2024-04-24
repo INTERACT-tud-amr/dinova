@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<robot name="dingo_kinova" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="robot_id" default="" />
+    <xacro:arg name="mode" default="velocity"/>
+    <xacro:arg name="load_gripper" default="true"/>
+
+    <!-- Add Dingo omnidrive -->
+    <xacro:include filename="$(find dinova_description)/urdf/dingo_omni_macro.xacro"/>
+    <xacro:dingo_omni prefix=""/>
+
+    <!-- Add kinova -->
+    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
+    <xacro:kinova prefix="$(arg robot_id)"/>
+
+
+    <!-- Add kinova gripper -->
+    <xacro:if value="$(arg load_gripper)">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova_gripper_macro.xacro"/>
+        <xacro:kinova_gripper prefix="$(arg robot_id)"/>
+
+        <joint name="$(arg robot_id)arm_gripper_base_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="$(arg robot_id)dummy_link"/>
+            <child link="$(arg robot_id)gripper_base_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+    </xacro:if>
+
+ 
+
+    <!-- Gazebo  -->
+    <xacro:include filename="$(find dinova_gazebo)/urdf/dingo_gazebo_transm_macro.xacro"/>
+    <xacro:dingo_omni_gazebo_trans mode="$(arg mode)" prefix="$(arg robot_id)" />
+    
+    <xacro:include filename="$(find dinova_gazebo)/urdf/kinova_gazebo_transm_macro.xacro"/>
+    <xacro:kinova_gazebo_trans mode="$(arg mode)" prefix="$(arg robot_id)"  load_gripper="$(arg load_gripper)"/>
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        </plugin>
+    </gazebo>
+
+
+    <!-- Create world joint -->
+    <link name="world"/>
+    <joint name="$(arg robot_id)world_link" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="world"/>
+        <child link="$(arg robot_id)base_link"/>
+    </joint>
+    <joint name="$(arg robot_id)arm_mount_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="$(arg robot_id)front_b_mount"/>
+        <child link="$(arg robot_id)kinova_base_link"/>
+    </joint>
+
+
+</robot>

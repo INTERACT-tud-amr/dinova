@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="dingo_omni_gazebo_trans" params="mode prefix">
+  <!-- Position Control Interface -->
+    <xacro:if value="${mode == 'position'}"> 
+        <!-- Joint 1 -->
+        <transmission name="${prefix}omni_joint_x_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_x">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_x_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <!-- Joint 2 -->
+        <transmission name="${prefix}omni_joint_y_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_y">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_y_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <!-- Joint 3 -->
+        <transmission name="${prefix}omni_joint_theta_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_theta">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_theta_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+      
+    </xacro:if>
+    <!-- Velocity Control Interface -->
+    <xacro:if value="${mode == 'velocity'}">
+        <!-- Joint 1 -->
+        <transmission name="${prefix}omni_joint_x_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_x">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_x_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <!-- Joint 2 -->
+        <transmission name="${prefix}omni_joint_y_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_y">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_y_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <!-- Joint 3 -->
+        <transmission name="${prefix}omni_joint_theta_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}omni_joint_theta">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}omni_joint_theta_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:if>
+
+    <gazebo reference="front_left_wheel_link">
+        <material>Gazebo/DarkGrey</material>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+    <gazebo reference="front_right_wheel_link">
+        <material>Gazebo/DarkGrey</material>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+    <gazebo reference="rear_left_wheel_link">
+        <material>Gazebo/DarkGrey</material>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+    <gazebo reference="rear_right_wheel_link">
+        <material>Gazebo/DarkGrey</material>
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+</xacro:macro>
+
+</robot>

@@ -15,27 +15,29 @@
 
 ## Requirements
 ``` bash
+sudo apt install ros-${ROS_DISTRO}-gazebo-ros-control
 sudo apt install ros-${ROS_DISTRO}-velocity-controllers
 sudo apt install ros-${ROS_DISTRO}-velodyne-gazebo-plugins
 sudo apt install ros-${ROS_DISTRO}-velodyne-description
+sudo apt install ros-${ROS_DISTRO}-roboticsgroup-upatras-gazebo-plugins  
 ```
 
 ## Running a simulation in Gazebo:
 To launch the simulation with `dinova`:
 ``` bash
-   roslaunch dinova_gazebo gazebo_dinova.launch
+   roslaunch dinova_gazebo dinova.launch
 ```
 To launch the simulation with `dingo` only:
 ``` bash
-   roslaunch dinova_gazebo gazebo_dingo_omni.launch
+   roslaunch dinova_gazebo dingo.launch
 ```
 To launch the simulation with `kinova` only:
 ``` bash
-   roslaunch dinova_gazebo gazebo_kinova.launch
+   roslaunch dinova_gazebo kinova.launch
 ```
 To launch the simulation with the lidar and dingo:
 ``` bash
-   roslaunch dingo_kinova_description gazebo_dingo_omni.launch lidar:=true
+   roslaunch dingo_kinova_description dingo.launch lidar:=true
 ```
 
 ## Controlling robots
@@ -43,7 +45,7 @@ The default mode is `position`. It can be changed to `velocity` by setting the
 mode argument as:
 
 ``` bash
-   roslaunch dingo_kinova_description gazebo_dingo_kinova.launch mode:=velocity
+   roslaunch dingo_kinova_description dinova.launch mode:=velocity
 ```
 ### Position mode
 There are two topics for controlling the robot in position mode:
@@ -53,11 +55,9 @@ There are two topics for controlling the robot in position mode:
 There are two topics for controlling the robot:
 1. `/joints_velocity_controller/command` - Velocity interface for each joint of Kinova: [q1, q2, q3, q4, q5, q6] in rad/s
 2. `/omnidrive_velocity_controller/command` - Velocity interface for omnidrive: [linear_x, linear_y, angular_z] in [m/s, m/s, rad/s]
-
-
-
-
-
+### Controlling gripper
+To control position of the gripper's right finger send command to:
+1. `/gripper_position_controller/gripper_cmd/goal`
 
 
 

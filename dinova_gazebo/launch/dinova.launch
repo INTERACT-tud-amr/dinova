@@ -1,11 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     <!-- Argumnets for Kinova robot -->
-    <arg name="dingo_id" value="" />
-    <arg name="gazebo" value="true" />
-
+    <arg name="dingo_id" default="" />
     <arg name="mode" default="position" />  
-    <arg name="lidar" default="false" />
     <arg name="load_gripper" default="true" />
 
     <!-- Arguments for Gazebo -->
@@ -17,11 +14,9 @@
 
 
     <!-- Load urdf -->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dingo_kinova_description)/urdf/dingo_kinova.xacro'
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_gazebo)/urdf/dinova_gazebo.xacro'
             robot_id:=$(arg dingo_id)
             mode:=$(arg mode)
-            gazebo:=$(arg gazebo)
-            lidar:=$(arg lidar)
             load_gripper:=$(arg load_gripper)"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -39,7 +34,7 @@
           output="screen" args="-param robot_description -urdf -model dingo_omni"/>
 
     <!-- Load joint controller configurations from YAML file to parameter server -->
-    <rosparam file="$(find dingo_kinova_description)/config/gazebo_controllers.yaml" command="load"/>
+    <rosparam file="$(find dinova_gazebo)/config/gazebo_controllers.yaml" command="load"/>
 
     <!-- load the controllers -->
     <group if="$(eval arg('mode') == 'position')">

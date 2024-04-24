@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     <!-- Argumnets for Kinova robot -->
-    <arg name="arm_id" value="" />
+    <arg name="dingo_id" default="" />
     <arg name="mode" default="position" />  
-    <arg name="gazebo" value="true" />
     <arg name="load_gripper" default="true" />
-
 
     <!-- Arguments for Gazebo -->
     <arg name="paused" default="false"/>
@@ -16,11 +14,9 @@
 
 
     <!-- Load urdf -->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder 
-        '$(find dingo_kinova_description)/urdf/kinova.xacro'
-            arm_id:=$(arg arm_id)
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_gazebo)/urdf/kinova_gazebo.xacro'
+            robot_id:=$(arg dingo_id)
             mode:=$(arg mode)
-            gazebo:=$(arg gazebo)
             load_gripper:=$(arg load_gripper)"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -35,13 +31,13 @@
 
     <!-- Spawn model in Gazebo -->
     <node name="model_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
-          output="screen" args="-param robot_description -urdf -model kinova"/>
+          output="screen" args="-param robot_description -urdf -model dingo_omni"/>
 
     <!-- Load joint controller configurations from YAML file to parameter server -->
-    <rosparam file="$(find dingo_kinova_description)/config/gazebo_controllers.yaml" command="load"/>
+    <rosparam file="$(find dinova_gazebo)/config/gazebo_controllers.yaml" command="load"/>
 
     <!-- load the controllers -->
-    <group if="$(eval arg('mode') == 'position')">        
+    <group if="$(eval arg('mode') == 'position')">
         <node name="controllers_spawner" pkg="controller_manager" type="spawner" respawn="false"
                 output="screen" args="
                     joint_state_controller
@@ -60,6 +56,7 @@
                     gripper_position_controller
                     "/>    
     </group>
+            
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
