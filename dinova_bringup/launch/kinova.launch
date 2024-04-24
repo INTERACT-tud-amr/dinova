@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Robot model -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro'"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+        <remap from="/joint_states" to="/kinova/joint_states" />
+    </node>
+
+    <!-- Teleoperation via joystick and rviz interactive markers -->
+    <include file="$(find dingo_control)/launch/teleop.launch" />
+
+
+    <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
+    <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
+    <node name="dinova_state_publisher" pkg="dinova_control" type="dinova_state_publisher.py" args="" output="screen"/>
+
+</launch>
