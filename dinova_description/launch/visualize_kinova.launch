@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="arm_id" default="" />
+    <arg name="load_gripper" default="false" />
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_description)/urdf/kinova.xacro'
+            arm_id:=$(arg arm_id)
+            load_gripper:=$(arg load_gripper)"/>
+
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+   
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dinova_description)/config/config.rviz" required="true"/>
+</launch>

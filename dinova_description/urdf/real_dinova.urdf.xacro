@@ -6,7 +6,7 @@
     <xacro:arg name="gazebo" default="true"/>
     <xacro:arg name="load_gripper" default="true"/>
 
-    <xacro:include filename="$(find dingo_kinova_description)/urdf/dingo-o.urdf.xacro" />
+    <xacro:include filename="$(find dinova_description)/urdf/dingo-o.urdf.xacro" />
 
      <xacro:arg name="robot_id" default="" />
     <xacro:arg name="mode" default="velocity"/>
@@ -16,13 +16,13 @@
 
 
     <!-- Add kinova -->
-    <xacro:include filename="$(find dingo_kinova_description)/urdf/kinova_macro.xacro"/>
+    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
     <xacro:kinova prefix="$(arg robot_id)"/>
 
 
     <!-- Add kinova gripper -->
     <xacro:if value="$(arg load_gripper)">
-        <xacro:include filename="$(find dingo_kinova_description)/urdf/kinova_gripper_macro.xacro"/>
+        <xacro:include filename="$(find dinova_description)/urdf/kinova_gripper_macro.xacro"/>
         <xacro:kinova_gripper prefix="$(arg robot_id)"/>
 
         <joint name="$(arg robot_id)arm_gripper_base_joint" type="fixed">

@@ -2,9 +2,16 @@
 <robot name="dinova" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:arg name="robot_id" default="" />
     <xacro:arg name="load_gripper" default="true"/>
+    <xacro:arg name="dingo_real_urdf" default="true"/>
 
     <!-- Add dingo -->
-    <xacro:include filename="$(find dinova_description)/urdf/dingo-o.urdf.xacro" />
+    <xacro:if value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/real_dingo-o.urdf.xacro" />
+    </xacro:if>
+    <xacro:if value="$(not arg dingo_real_urdf)">
+        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo_omni.xacro'
+                                                dingo_id:=$(arg robot_id)"/>
+    </xacro:if>
 
 
     <!-- Add kinova -->

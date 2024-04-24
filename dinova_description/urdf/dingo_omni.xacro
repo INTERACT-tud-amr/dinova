@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<robot name="dingo_omni" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="dingo_id" default="" />
+    <xacro:arg name="lidar" default="false"/>
+
+
+    <!-- Add Dingo omnidrive -->
+    <xacro:include filename="$(find dinova_description)/urdf/dingo_omni_macro.xacro"/>
+    <xacro:dingo_omni prefix="$(arg dingo_id)"/>
+
+    <!-- Create world joint -->
+    <link name="world"/>
+    <joint name="$(arg dingo_id)world_link" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="world"/>
+        <child link="$(arg dingo_id)base_link"/>
+    </joint>
+
+    <xacro:if value="$(arg lidar)">
+      <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+      <xacro:VLP-16 parent="$(arg dingo_id)mid_mount" name="velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="false" min_range="0.4" >
+          <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:VLP-16>
+    </xacro:if>
+</robot>

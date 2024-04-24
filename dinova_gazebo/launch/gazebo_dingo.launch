@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Argumnets for Kinova robot -->
+    <arg name="dingo_id" value="" />
+    <arg name="mode" value="velocity" />  
+    <arg name="gazebo" value="true" />
+
+    <!-- Arguments for Gazebo -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="lidar" default="false"/>
+
+
+    <!-- Load urdf -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dingo_kinova_description)/urdf/dingo_omni.xacro'
+            dingo_id:=$(arg dingo_id)
+            mode:=$(arg mode)
+            lidar:=$(arg lidar)
+            gazebo:=$(arg gazebo)"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- <arg name="world_name" value="$(find dingo_kinova_description)/config/dingo_kinova.world"/> -->
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+
+
+    <!-- Spawn model in Gazebo -->
+    <node name="model_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
+          output="screen" args="-param robot_description -urdf -model dingo_omni"/>
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find dingo_kinova_description)/config/gazebo_controllers.yaml" command="load"/>
+
+    <!-- load the controllers -->
+    <group if="$(eval arg('mode') == 'position')">
+        <node name="controllers_spawner" pkg="controller_manager" type="spawner" respawn="false"
+                output="screen" args="
+                    joint_state_controller
+                    omnidrive_position_controller"/>    
+    </group>
+    <group if="$(eval arg('mode') == 'velocity')">
+        <node name="controllers_spawner" pkg="controller_manager" type="spawner" respawn="false"
+                output="screen" args="
+                    joint_state_controller
+                    omnidrive_velocity_controller"/>    
+    </group>
+            
+
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <!-- <param name="publish_frequency" value="100.0"/> -->
+    </node>
+</launch>
+
+   

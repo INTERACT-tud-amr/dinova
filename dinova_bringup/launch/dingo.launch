@@ -4,7 +4,7 @@
     <arg name="config" default="$(optenv DINGO_CONFIG base)" />
     
     <!-- Robot model -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo-o.urdf.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro'"/>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
     </node>
 
