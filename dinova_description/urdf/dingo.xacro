@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<robot name="dingo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- dingo_real_urdf => There is a difference between urdf file for real dingo and the one in gazebo/control (wheel vs [x,y,theta]).
+                            For Gazebo set it to false -->
+    <xacro:arg name="dingo_real_urdf" default="" />
+    <xacro:arg name="lidar" default="true"/>
+
+    <!-- Add dingo -->
+    <xacro:if value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/real_dingo-o.urdf.xacro" />
+    </xacro:if>
+    <xacro:unless value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/dingo_omni_macro.xacro"/>
+        <xacro:dingo_omni prefix=""/>
+        
+        <link name="world"/>
+        <joint name="world_link" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="world"/>
+            <child link="base_link"/>
+        </joint>
+    </xacro:unless>
+  
+
+    <xacro:if value="$(arg lidar)">
+      <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+      <xacro:VLP-16 parent="mid_mount" name="velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="false" min_range="0.4" >
+          <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:VLP-16>
+    </xacro:if>
+</robot>

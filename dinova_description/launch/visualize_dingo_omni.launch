@@ -1,21 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="dingo_id" default="" />
     <!-- dingo_real_urdf => There is a difference between urdf file for real dingo and the one in gazebo/control (wheel vs [x,y,theta]).
                             For Gazebo set it to false -->
     <arg name="dingo_real_urdf" default="true" />
     <arg name="lidar" default="false" />
 
-
-    <group if="$(eval arg('dingo_real_urdf'))">
-        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro'
-                                            "/>       
-    </group>
-    <group if="$(eval not arg('dingo_real_urdf'))">
-        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo_omni.xacro'
-                                                dingo_id:=$(arg dingo_id)
-                                                lidar:=$(arg dingo_id)"/>
-    </group>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dingo.xacro'
+                                                dingo_real_urdf:=$(arg dingo_real_urdf)
+                                                lidar:=$(arg lidar)"/>
+    
 
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
    
