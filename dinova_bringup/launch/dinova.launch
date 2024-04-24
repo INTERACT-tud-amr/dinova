@@ -2,9 +2,15 @@
 <launch>
     <arg name="motor_params" default="$(optenv DINGO_MOTOR_PARAMS base)" />
     <arg name="config" default="$(optenv DINGO_CONFIG base)" />
-    
+    <!-- dingo_real_urdf => There is a difference between urdf file for real dingo and the one in gazebo/control (wheel vs [x,y,theta]).
+                        For Gazebo set it to false -->
+    <arg name="dingo_real_urdf" default="true" />
+    <arg name="load_gripper" default="true" />
+
     <!-- Robot model -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
+                                            dingo_real_urdf:=$(arg dingo_real_urdf)
+                                            load_gripper:=$(arg load_gripper)"/>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
         <remap from="/joint_states" to="/dinova/joint_states" />
     </node>

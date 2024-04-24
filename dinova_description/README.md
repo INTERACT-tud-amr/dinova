@@ -17,7 +17,10 @@
 > Be aware that there is a difference between `real_dingo_urdf` and `model_dingo_urdf`. 
 >
 > The urdf file for real robot is expressed by four wheels. 
+>
 > The model for Gazebo/Control is expressed by the omnibase world coordinates [x,y, theta]
+>
+> To distinguish between these urdf files, use the `dingo_real_urdf` argument. Its default value is `True`.
 
 ## Visualizing a robot model in RViz and `joint_state_gui_publisher`:
 To launch the visualization with `dinova`:

@@ -2,7 +2,7 @@
 <robot name="dingo" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- dingo_real_urdf => There is a difference between urdf file for real dingo and the one in gazebo/control (wheel vs [x,y,theta]).
                             For Gazebo set it to false -->
-    <xacro:arg name="dingo_real_urdf" default="" />
+    <xacro:arg name="dingo_real_urdf" default="true" />
     <xacro:arg name="lidar" default="true"/>
 
     <!-- Add dingo -->
