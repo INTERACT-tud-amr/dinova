@@ -50,14 +50,17 @@ mode argument as:
 ### Position mode
 There are two topics for controlling the robot in position mode:
 1. `/joints_position_controller/command` -  Position interface for each joint of Kinova: [q1, q2, q3, q4, q5, q6] in rad
-2. `/omnidrive_position_controller/command` -  Position interface for omnidrive: [linear_x, linear_y, angular_z] in [m, m rad
+2. `/omnidrive_position_controller/command` -  Position interface for omnidrive: [linear_x, linear_y, angular_z] in [m, m, rad]
 ### Velocity mode
 There are two topics for controlling the robot:
-1. `/joints_velocity_controller/command` - Velocity interface for each joint of Kinova: [q1, q2, q3, q4, q5, q6] in rad/s
+1. `/kinova/command` - Velocity interface for each joint of Kinova: [q1, q2, q3, q4, q5, q6] in rad/s
 2. `/omnidrive_velocity_controller/command` - Velocity interface for omnidrive: [linear_x, linear_y, angular_z] in [m/s, m/s, rad/s]
 ### Controlling gripper
 To control position of the gripper's right finger send command to:
 1. `/gripper_position_controller/gripper_cmd/goal`
+### Feedback
+1. `/dinova/omni_states` -> Contains state of the omnibase and arm. Same topic as with the real robot as well. This is only published with `dinova`.
+2. `/kinova/joint_states` -> Contains state of the arm. Same topic as with the real robot as well. This is only published with `kinova`.
 
 
 

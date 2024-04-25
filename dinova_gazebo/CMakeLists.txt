@@ -157,6 +157,8 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/dinova_gazebo_state_publisher.py
+  scripts/kinova_gazebo_state_publisher.py
+
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

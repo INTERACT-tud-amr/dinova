@@ -62,6 +62,8 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <!-- <param name="publish_frequency" value="100.0"/> -->
     </node>
+    <node name="kinova_gazebo_state_publisher" pkg="dinova_gazebo" type="kinova_gazebo_state_publisher.py" output="screen" />
+
 </launch>
 
    

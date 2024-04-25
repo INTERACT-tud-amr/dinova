@@ -59,7 +59,7 @@
                     "/>    
     </group>
             
-    <node name="dinova_state_publisher" pkg="dinova_gazebo" type="dinova_gazebo_state_publisher.py" output="screen" />
+    <node name="dinova_gazebo_state_publisher" pkg="dinova_gazebo" type="dinova_gazebo_state_publisher.py" output="screen" />
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
