@@ -20,16 +20,16 @@ PUBLISH_RATE = 40 #Hz
 
 class ControlInterface():
     """A node that starts the control interface of the robot."""
-    def __init__(self, mode="position") -> None:
+    def __init__(self, mode="HLC_velocity") -> None:
         self.mode = mode
 
         self.pub_feedback = rospy.Publisher('/kinova/joint_states', JointState, queue_size=10)
         rospy.Subscriber("/kinova/command", Float64MultiArray, self.callback_command)
-        rospy.Subscriber("/kinova/gripper", Float64, self.callback_gripper)
+        # rospy.Subscriber("/kinova/gripper", Float64, self.callback_gripper)
         rospy.Subscriber("/kinova/error_ack", Empty, self.callback_error_ack)
 
         # Emergency switch
-        rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
+        # rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
         self.emergency_switch_pressed = False
 
         # Services for setting predefined joint positions
@@ -40,6 +40,9 @@ class ControlInterface():
         rospy.Service("/kinova/change_to_LLC_velocity", Trigger, self.handle_LLC_velocity)
         rospy.Service("/kinova/change_to_HLC_position", Trigger, self.handle_HLC_position)
         rospy.Service("/kinova/change_to_HLC_velocity", Trigger, self.handle_HLC_velocity)
+        # Gripper
+        rospy.Service("/kinova/gripper/open", Trigger, self.handle_gripper_open)
+        rospy.Service("/kinova/gripper/close", Trigger, self.handle_gripper_close)
 
 
         self.state = State()
@@ -177,7 +180,11 @@ class ControlInterface():
         self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
 
 
-        
+    def handle_gripper_open(self, req):
+        return self.kinova.open_gripper(), "Gripper is opened"
+
+    def handle_gripper_close(self, req):
+        return self.kinova.close_gripper(), "Gripper is clossed"
 
 
 if __name__ == "__main__":
