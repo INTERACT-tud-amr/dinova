@@ -2,11 +2,12 @@
 <launch>
     <arg name="motor_params" default="$(optenv DINGO_MOTOR_PARAMS base)" />
     <arg name="config" default="$(optenv DINGO_CONFIG base)" />
-    
+    <arg name="lidar" default="false"/>
+
     <!-- Robot model -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro'"/>
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-    </node>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro' 
+                                                    lidar:=$(arg lidar)"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
     <!-- DINGO Nodes -->
 

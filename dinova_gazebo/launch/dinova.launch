@@ -20,7 +20,7 @@
             load_gripper:=$(arg load_gripper)"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <!-- <arg name="world_name" value="$(find dingo_kinova_description)/config/dingo_kinova.world"/> -->
+        <arg name="world_name" value="$(find dinova_gazebo)/config/dingo_kinova.world"/>
         <arg name="debug" value="$(arg debug)" />
         <arg name="gui" value="$(arg gui)" />
         <arg name="paused" value="$(arg paused)"/>
@@ -49,7 +49,7 @@
                 output="screen" args="
                     joint_state_controller
                     omnidrive_velocity_controller
-                    joints_velocity_controller"/>    
+                    kinova"/>    
     </group>
     <!-- load the gripper controller -->
     <group if="$(eval arg('load_gripper'))">
@@ -59,6 +59,7 @@
                     "/>    
     </group>
             
+    <node name="dinova_state_publisher" pkg="dinova_gazebo" type="dinova_gazebo_state_publisher.py" output="screen" />
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">

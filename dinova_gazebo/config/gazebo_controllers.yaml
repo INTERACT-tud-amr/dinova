@@ -28,7 +28,7 @@ joints_position_controller:
         - joint_5
         - joint_6
 
-joints_velocity_controller:
+kinova:
     type: velocity_controllers/JointGroupVelocityController
     joints:
         - joint_1

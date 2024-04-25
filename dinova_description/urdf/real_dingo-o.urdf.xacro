@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <robot name="dingo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="lidar" default="false"/>
+
   <xacro:property name="pacs_enabled" value="$(optenv DINGO_PACS_ENABLED 0)" />
 
   <xacro:property name="PI" value="3.1415926535897931" />
@@ -193,6 +195,12 @@
     <child link="front_bumper_mount" />
   </joint>
 
+  <xacro:if value="$(arg lidar)">
+      <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+      <xacro:VLP-16 parent="mid_mount" name="velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="false" min_range="0.4" >
+          <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:VLP-16>
+    </xacro:if>
  
    
 </robot>
