@@ -176,8 +176,9 @@ class KinovaRobot():
 
     def _move_gripper(self, pos_msg) -> None:
         gripper_command = Base_pb2.GripperCommand()
-        gripper_command.mode = Base_pb2.GRIPPER_POSITION
         finger = gripper_command.gripper.finger.add()
+
+        gripper_command.mode = Base_pb2.GRIPPER_POSITION
         finger.finger_identifier = 1
         pos = self.get_gripper_position() + pos_msg
         if pos >= 0.0 and pos <= 0.8:
@@ -185,6 +186,50 @@ class KinovaRobot():
             self.base.SendGripperCommand(gripper_command)
         else:
             print("Invalid command for gripper")
+
+    def open_gripper(self) -> bool:
+        # Create the GripperCommand we will send
+        gripper_command = Base_pb2.GripperCommand()
+        finger = gripper_command.gripper.finger.add()
+        gripper_command.mode = Base_pb2.GRIPPER_SPEED
+        finger.finger_identifier = 1
+
+        # Set speed to open gripper
+        finger.value = 1.0
+        self.base.SendGripperCommand(gripper_command)
+        # Wait for reported position to be opened
+        gripper_request = Base_pb2.GripperRequest()
+        gripper_request.mode = Base_pb2.GRIPPER_POSITION
+        while True:
+            gripper_measure = self.base.GetMeasuredGripperMovement(gripper_request)
+            if len (gripper_measure.finger):
+                if gripper_measure.finger[0].value < 0.01:
+                    break
+            else: # Else, no finger present in answer, end loop
+                break
+        return True
+
+
+    def close_gripper(self) -> None:
+         # Create the GripperCommand we will send
+        gripper_command = Base_pb2.GripperCommand()
+        finger = gripper_command.gripper.finger.add()
+        gripper_command.mode = Base_pb2.GRIPPER_SPEED
+        finger.finger_identifier = 1
+
+        finger.value = -1.0
+        self.base.SendGripperCommand(gripper_command)
+        # Wait for reported position to be opened
+        gripper_request = Base_pb2.GripperRequest()
+        gripper_request.mode = Base_pb2.GRIPPER_POSITION
+        while True:
+            gripper_measure = self.base.GetMeasuredGripperMovement(gripper_request)
+            if len (gripper_measure.finger):
+                if gripper_measure.finger[0].value >= 1:
+                    break
+            else: # Else, no finger present in answer, end loop
+                break
+        return True
 
     def set_high_level_position(self, position) -> None:
         """Perform a high level move."""
