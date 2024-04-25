@@ -37,7 +37,7 @@ To launch the simulation with `kinova` only:
 ```
 To launch the simulation with the lidar and dingo:
 ``` bash
-   roslaunch dingo_kinova_description dingo.launch lidar:=true
+   roslaunch dinova_gazebo dingo.launch lidar:=true
 ```
 
 ## Controlling robots
@@ -45,7 +45,7 @@ The default mode is `position`. It can be changed to `velocity` by setting the
 mode argument as:
 
 ``` bash
-   roslaunch dingo_kinova_description dinova.launch mode:=velocity
+   roslaunch dinova_gazebo dinova.launch mode:=velocity
 ```
 ### Position mode
 There are two topics for controlling the robot in position mode:
