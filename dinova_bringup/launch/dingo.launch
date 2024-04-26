@@ -3,6 +3,14 @@
     <arg name="motor_params" default="$(optenv DINGO_MOTOR_PARAMS base)" />
     <arg name="config" default="$(optenv DINGO_CONFIG base)" />
     <arg name="lidar" default="false"/>
+     <!-- Vicon -->
+    <arg name="vicon" default="true" />
+    <arg name="object_names" default="[dingo1, mug1]"/>
+    <arg name="object_msg_types" default="[geometry_msgs/PoseStamped, geometry_msgs/PoseStamped]"/>
+    <arg name="object_frame_ids" default="[map, map]"/>
+    <arg name="object_publish_topics" default="[/vicon/dingo1, /vicon/mug1]"/>
+    <arg name="object_frequency_divider" default="[2, 10]"/>
+
 
     <!-- Robot model -->
     <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/real_dingo-o.urdf.xacro' 
@@ -49,4 +57,14 @@
         </node>
     </group>
 
+    <!-- Vicon Nodes -->
+    <!-- <group if="$(eval arg('vicon') == 'true')">
+        <include file="$(find dinova_bringup)/launch/vicon.launch">
+            <arg name="object_names"                    value="$(arg object_names)"/>
+            <arg name="object_msg_types"                value="$(arg object_msg_types)"/>
+            <arg name="object_frame_ids"                value="$(arg object_frame_ids)"/>
+            <arg name="object_publish_topics"           value="$(arg object_publish_topics)"/>
+            <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
+        </include>
+    </group> -->
 </launch>

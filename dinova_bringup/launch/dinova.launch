@@ -6,6 +6,13 @@
                         For Gazebo set it to false -->
     <arg name="dingo_real_urdf" default="true" />
     <arg name="load_gripper" default="true" />
+    <!-- Vicon -->
+    <arg name="vicon" default="true" />
+    <arg name="object_names" default="[dingo1, mug1]"/>
+    <arg name="object_msg_types" default="[geometry_msgs/PoseStamped, geometry_msgs/PoseStamped]"/>
+    <arg name="object_frame_ids" default="[map, map]"/>
+    <arg name="object_publish_topics" default="[/vicon/dingo1, /vicon/mug1]"/>
+    <arg name="object_frequency_divider" default="[2, 10]"/>
 
     <!-- Robot model -->
     <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
@@ -58,6 +65,21 @@
     <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
     <node name="dinova_control" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
     <node name="dinova_state_publisher" pkg="dinova_control" type="dinova_state_publisher.py" args="" output="screen"/>
+
+    <!-- Vicon Node -->
+    <!-- <group if="$(arg vicon"> -->
+        <!-- <param name="/vicon/use_vicon" type="bool" value="true" /> -->
+        <!-- <param name="/vicon/dingo_topic" type="string" value="dingo1" /> -->
+
+        <include file="$(find dinova_bringup)/launch/vicon.launch">
+            <arg name="object_names"                    value="$(arg object_names)"/>
+            <arg name="object_msg_types"                value="$(arg object_msg_types)"/>
+            <arg name="object_frame_ids"                value="$(arg object_frame_ids)"/>
+            <arg name="object_publish_topics"           value="$(arg object_publish_topics)"/>
+            <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
+        </include>
+    <!-- </group> -->
+    
 
 
 </launch>

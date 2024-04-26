@@ -2,6 +2,6 @@ kinova_feedback:
   alpha_torque : 0.05
   alpha_dq : 0.05
 
-dingo_feedback:
-  vicon_used : false
-  vicon_topic : "/vicon/dingo1"
+vicon:
+  use_vicon: false
+  dingo_topic: /vicon/dingo1
