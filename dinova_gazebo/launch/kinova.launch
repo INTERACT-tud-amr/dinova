@@ -5,6 +5,7 @@
     <arg name="mode" default="position" />  
     <arg name="load_gripper" default="true" />
     <arg name="rviz" default="false" />
+    <arg name="dyn_obstacle" default="false" />
 
     <!-- Arguments for Gazebo -->
     <arg name="paused" default="false"/>
@@ -20,14 +21,26 @@
             mode:=$(arg mode)
             load_gripper:=$(arg load_gripper)"/>
 
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find dinova_gazebo)/config/dingo_kinova.world"/>
-        <arg name="debug" value="$(arg debug)" />
-        <arg name="gui" value="$(arg gui)" />
-        <arg name="paused" value="$(arg paused)"/>
-        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-        <arg name="headless" value="$(arg headless)"/>
-    </include>
+    <group if="$(arg dyn_obstacle)">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(find dinova_gazebo)/config/dingo_kinova_dyn_obstacle.world"/>
+            <arg name="debug" value="$(arg debug)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+        </include>
+    </group>
+    <group unless="$(arg dyn_obstacle)">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(find dinova_gazebo)/config/dingo_kinova.world"/>
+            <arg name="debug" value="$(arg debug)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+        </include>
+    </group>
 
 
     <!-- Spawn model in Gazebo -->

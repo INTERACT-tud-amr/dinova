@@ -5,7 +5,14 @@ project(dinova_gazebo)
 add_compile_options(-std=c++17)
 
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  gazebo_ros
+  roscpp
+  tf2
+  tf2_ros
+  std_msgs
+  geometry_msgs
+)
 find_package(gazebo 11 REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -24,6 +31,7 @@ catkin_package(
     gazebo_ros
     roscpp
     tf2
+    tf2_ros
     std_msgs
     geometry_msgs
 #  DEPENDS system_lib
@@ -41,7 +49,10 @@ include_directories(
  ${GAZEBO_INCLUDE_DIRS}
 )
 
+link_directories(${GAZEBO_LIBRARY_DIRS})
 
+add_library(dynamic_obstacle_plugin dynamic_obstacle_plugin/dynamic_obstacle_plugin.cpp)
+target_link_libraries(dynamic_obstacle_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 #############
 ## Install ##
 #############
