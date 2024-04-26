@@ -4,6 +4,7 @@
     <arg name="dingo_id" default="" />
     <arg name="mode" default="position" />  
     <arg name="load_gripper" default="true" />
+    <arg name="rviz" default="false" />
 
     <!-- Arguments for Gazebo -->
     <arg name="paused" default="false"/>
@@ -64,6 +65,9 @@
     </node>
     <node name="kinova_gazebo_state_publisher" pkg="dinova_gazebo" type="kinova_gazebo_state_publisher.py" output="screen" />
 
+    <group if="$(eval arg('rviz'))">
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dinova_gazebo)/config/kinova.rviz" required="true" />
+    </group>
 </launch>
 
    

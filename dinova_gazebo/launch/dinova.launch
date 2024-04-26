@@ -4,6 +4,7 @@
     <arg name="dingo_id" default="" />
     <arg name="mode" default="position" />  
     <arg name="load_gripper" default="true" />
+    <arg name="rviz" default="false" />
 
     <!-- Arguments for Gazebo -->
     <arg name="paused" default="false"/>
@@ -59,12 +60,17 @@
                     "/>    
     </group>
             
-    <node name="dinova_gazebo_state_publisher" pkg="dinova_gazebo" type="dinova_gazebo_state_publisher.py" output="screen" />
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <!-- <param name="publish_frequency" value="100.0"/> -->
     </node>
+    <node name="dinova_gazebo_state_publisher" pkg="dinova_gazebo" type="dinova_gazebo_state_publisher.py" output="screen" />
+
+    <group if="$(eval arg('rviz'))">
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dinova_gazebo)/config/dinova.rviz" required="true" />
+    </group>
+
 </launch>
 
    
