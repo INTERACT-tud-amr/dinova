@@ -6,17 +6,17 @@ from sensor_msgs.msg import JointState
 from threading import Thread
 from nav_msgs.msg import Odometry
 import tf
-from dinova_control.state import State
 
 
 class DinovaStatePublisher():
     def __init__(self) -> None:
         self.vicon_use = rospy.get_param("/dingo_feedback/vicon_used")
+        self.vicon_dingo_topic = rospy.get_param("/dingo_feedback/vicon_topic")
 
         self.pub_dinova_state = rospy.Publisher('/dinova/joint_states', JointState, queue_size=1)
         self.pub_dinova_omni_state = rospy.Publisher('/dinova/omni_states', JointState, queue_size=1) #TODO
         if self.vicon_use:
-            rospy.Subscriber("/robot_ekf/odometry", Odometry, self.callback_odometry)
+            rospy.Subscriber(self.vicon_dingo_topic, Odometry, self.callback_odometry)
         else:
             rospy.Subscriber("/odometry/filtered", Odometry, self.callback_odometry)
 
@@ -27,16 +27,18 @@ class DinovaStatePublisher():
         self.n_dofs_kinova = 6
         self.dingo_joint_names = ["front_left_wheel", "front_right_wheel",
                                  "rear_left_wheel", "rear_right_wheel"]
-        self.kinova_act_state = State()
+        self.kinova_act_state = None
 
 
     def callback_dingo_state(self, msg):
-        # publish /dinova/joint_states
-        self.publish_joint_states(msg)
+        if self.kinova_act_state != None:
+            # publish /dinova/joint_states
+            self.publish_joint_states(msg)
     
     def callback_odometry(self, msg):
-        # publish [x,y,theta, q]
-        self.publish_omni_dinova_state(msg)
+        if self.kinova_act_state != None:
+            # publish [x,y,theta, q]
+            self.publish_omni_dinova_state(msg)
     
     def publish_joint_states(self, msg):
         js_msg = JointState()

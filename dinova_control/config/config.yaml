@@ -4,3 +4,4 @@ kinova_feedback:
 
 dingo_feedback:
   vicon_used : false
+  vicon_topic : "/vicon/dingo1"

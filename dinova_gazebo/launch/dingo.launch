@@ -9,6 +9,7 @@
     <arg name="lidar" default="false"/>
     <arg name="dingo_id" default="" />
     <arg name="mode" default="velocity" />  
+    <arg name="rviz" default="false" />
 
     <!-- Load urdf -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_gazebo)/urdf/dingo_gazebo.xacro'
@@ -53,6 +54,9 @@
         <!-- <param name="publish_frequency" value="100.0"/> -->
     </node>
     
+    <group if="$(eval arg('rviz'))">
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dinova_gazebo)/config/dingo.rviz" required="true" />
+    </group>
 </launch>
 
    
