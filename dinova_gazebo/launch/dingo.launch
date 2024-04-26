@@ -10,6 +10,8 @@
     <arg name="dingo_id" default="" />
     <arg name="mode" default="velocity" />  
     <arg name="rviz" default="false" />
+    <arg name="dyn_obstacle" default="false" />
+
 
     <!-- Load urdf -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_gazebo)/urdf/dingo_gazebo.xacro'
@@ -17,14 +19,25 @@
             mode:=$(arg mode)
             lidar:=$(arg lidar)"/>
 
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <!-- <arg name="world_name" value="$(find dingo_kinova_description)/config/dingo_kinova.world"/> -->
-        <arg name="debug" value="$(arg debug)" />
-        <arg name="gui" value="$(arg gui)" />
-        <arg name="paused" value="$(arg paused)"/>
-        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-        <arg name="headless" value="$(arg headless)"/>
-    </include>
+    <group if="$(arg dyn_obstacle)">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(find dinova_gazebo)/config/dingo_kinova_dyn_obstacle.world"/>
+            <arg name="debug" value="$(arg debug)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+        </include>
+    </group>
+    <group unless="$(arg dyn_obstacle)">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="debug" value="$(arg debug)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+        </include>
+    </group>
 
 
     <!-- Spawn model in Gazebo -->
