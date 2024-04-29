@@ -29,7 +29,7 @@ class ControlInterface():
         rospy.Subscriber("/kinova/error_ack", Empty, self.callback_error_ack)
 
         # Emergency switch
-        # rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
+        rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
         self.emergency_switch_pressed = False
 
         # Services for setting predefined joint positions
