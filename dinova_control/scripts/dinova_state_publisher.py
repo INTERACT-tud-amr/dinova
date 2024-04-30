@@ -23,14 +23,15 @@ class DinovaStatePublisher():
         rospy.Subscriber("/joint_states", JointState, self.callback_dingo_state)
         rospy.Subscriber("/kinova/joint_states", JointState, self.callback_kinova_state)
 
-        self.n_dofs_dingo = 4
+        self.n_dofs_dingo_wheels = 4
+        self.n_dofs_dingo_omni = 3
         self.n_dofs_kinova = 6
         self.dingo_joint_names = ["front_left_wheel", "front_right_wheel",
                                  "rear_left_wheel", "rear_right_wheel"]
         self.dingo_omni_names = ["omni_joint_x", "omni_joint_y", "omni_joint_theta"]
-        self.kinova_act_state = None
-        self.dingo_base_state = None
-        self.dingo_vicon_state = None
+        self.kinova_act_state = self.init_kinova_joint_state_var()
+        self.dingo_base_state = self.init_dingo_joint_state_var()
+        self.dingo_vicon_state = self.init_dingo_joint_state_var()
     
     def callback_vicon(self, msg):
         js_msg = JointState()
@@ -85,7 +86,7 @@ class DinovaStatePublisher():
         js_msg = JointState()
         js_msg.header.stamp = rospy.Time.now()
         # Dingo
-        for i in range(self.n_dofs_dingo):
+        for i in range(self.n_dofs_dingo_wheels):
             name = self.dingo_joint_names[i]
             js_msg.name.append(name)
             js_msg.position.append(msg.position[i])
@@ -147,9 +148,34 @@ class DinovaStatePublisher():
         js_msg.effort.append(self.kinova_act_state.effort[-1])
         self.pub_dinova_omni_state.publish(js_msg)
 
-
     def callback_kinova_state(self, msg):
         self.kinova_act_state = msg
+    
+    def init_dingo_joint_state_var(self):
+        jointstate = JointState()
+        jointstate.header.stamp = rospy.Time.now()
+        for i in range(self.n_dofs_dingo_omni):
+            jointstate.name.append(self.dingo_omni_names[i])
+            jointstate.position.append(0.0)
+            jointstate.velocity.append(0.0)
+            jointstate.effort.append(0.0)
+        return jointstate
+    
+    def init_kinova_joint_state_var(self):
+        jointstate = JointState()
+        jointstate.header.stamp = rospy.Time.now()
+        for i in range(self.n_dofs_kinova):
+            name = "joint_" + str(i+1)
+            jointstate.name.append(name)
+            jointstate.position.append(0.0)
+            jointstate.velocity.append(0.0)
+            jointstate.effort.append(0.0)
+        jointstate.name.append("right_finger_bottom_joint")
+        jointstate.position.append(0.0)
+        jointstate.velocity.append(0.0)
+        jointstate.effort.append(0.0)
+        return jointstate
+
 
 
 if __name__ == "__main__":

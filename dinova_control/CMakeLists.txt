@@ -45,6 +45,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/kinova_driver.py
   scripts/dinova_state_publisher.py
+  scripts/test.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
