@@ -19,6 +19,18 @@ To launch the control interface for Kinova:
     roslaunch dinova_bringup kinova.launch
 ```
 
+## Running a real robot with Vicon
+The default config for Vicon consists of the robot and the `mug1` object. To change it, you need to modify the launch file in an appropriate launch file within the `dinova_bringup` package.
+
+To launch the control interface for Dinova with Vicon: 
+``` bash
+roslaunch dinova_bringup dinova.launch vicon:=true
+```
+To launch the control interface for Dingo with Vicon: 
+``` bash
+roslaunch dinova_bringup dingo.launch vicon:=true
+```
+
 ## Description
 1. `dinova_bringup` -> Contains launch files for controlling Dinova, Kinova and Dingo. 
 2. `dinova_control` -> Contains ROS driver for Kinova and the node that collects states from all robots. For more information [here](/dinova_control/README.md).

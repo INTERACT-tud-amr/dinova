@@ -15,11 +15,12 @@ The default control mode is `High Level Velocity`. If you want to change the con
 ## Important topics
 Topics:
 1. `/kinova/command` - Topic for controlling kinova's joints
-2. `/kinova/error_ack` - Topic for acknowledging faults
-<!-- 3. `/kinova/gripper` - Topic for controlling relative fingers' positions -->
-3. `/kinova/joint_states` - Topic for subscribing the actual state of the robot in [rad, rad/s, Nm]
-4. `/dinova/joint_states` - Topic for subscribing the actual state of dinova [wheels, q]. This is mainly use for RViz, tf, ...
-5. `/dinova/omni_states` - Topic for subscribing the actual state of dinova [x, y, theta, q]. The omnibase pose is received from odometry or Vicon, depending on the parameter in `dinova_control/config/config.yaml`.
+2. `/cmd_vel` - Topic for controlling omnibase's velocities
+3. `/kinova/error_ack` - Topic for acknowledging faults
+4. `/kinova/joint_states` - Topic for subscribing the actual state of the robot in [rad, rad/s, Nm]
+5. `/dinova/joint_states` - Topic for subscribing the actual state of dinova [wheels, q]. This is mainly use for RViz, tf, ...
+6. `/dinova/omni_states` - Topic for subscribing the actual state of dinova [x, y, theta, q]. The omnibase pose is received from odometry.
+7. `/dinova/omni_states_vicon` - Topic for subscribing the actual state of dinova [x, y, theta, q]. The omnibase pose is received from vicon.
 
 
 ## Useful services:
@@ -27,7 +28,7 @@ Topics:
 2. `rosservice call /kinova/go_home_position` - Move an arm to home joint position
 3. `rosservice call /kinova/gripper/open` - Open gripper
 4. `rosservice call /kinova/gripper/close` - Close gripper
-`
+
 
 
 

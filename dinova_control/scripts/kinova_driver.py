@@ -32,7 +32,7 @@ class ControlInterface():
         rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
         self.emergency_switch_pressed = False
         # Dingo lights
-        self.pub_dingo_lights = rospy.Publisher('/cmd_lights', Lights, queue_size=10)
+        # self.pub_dingo_lights = rospy.Publisher('/cmd_lights', Lights, queue_size=10)
 
         # Services for setting predefined joint positions
         rospy.Service("/kinova/go_home_position", Trigger, self.handle_go_home_pos)
@@ -141,7 +141,7 @@ class ControlInterface():
         self.state.kinova_command.dq = self.kinova.actuator_count * [0.]
         success = self.kinova.set_high_level_position(self.state.kinova_command.q)
         self.different_command_active = False
-        return success, ""
+        return success, "Home position reached"
     
     def handle_go_zero_pos(self, req):
         self.different_command_active = True
@@ -149,7 +149,7 @@ class ControlInterface():
         self.state.kinova_command.dq = self.kinova.actuator_count * [0.]
         success = self.kinova.set_high_level_position(self.state.kinova_command.q)
         self.different_command_active = False
-        return success, ""
+        return success, "Zero position reached"
 
     def handle_HLC_position(self, req):
         self.mode = "HLC_position"
