@@ -37,6 +37,8 @@ roslaunch dinova_bringup dingo.launch vicon:=true
 3. `dinova_description` -> URDF files for Dinova, Kinova and Dingo. For more information [here](/dinova_description/README.md).
 4. `dinova_gazebo` -> Gazebo package for simulating Dinova, Kinova and Dingo. For more information [here](/dinova_gazebo/README.md).
 
+## Sensors
+- Lidar Velodyne VLP16
 
 # TODO:
 1. Vicon node is missing
