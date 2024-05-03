@@ -8,6 +8,7 @@ from sensor_msgs.msg import JointState
 class DinovaGazeboStatePublisher():
     def __init__(self) -> None:
         self.pub_dinova_state = rospy.Publisher('/dinova/omni_states', JointState, queue_size=1)
+        self.pub_dinova_state_vicon = rospy.Publisher('/dinova/omni_states_vicon', JointState, queue_size=1)
         rospy.Subscriber("/joint_states", JointState, self.callback_joint_state)
     
         self.dingo_joint_names = ["omni_joint_x", "omni_joint_y", "omni_joint_theta"]
@@ -45,7 +46,7 @@ class DinovaGazeboStatePublisher():
         js_msg.effort.append(msg.effort[9])
 
         self.pub_dinova_state.publish(js_msg)
-
+        self.pub_dinova_state_vicon.publish(js_msg)
 
 
 if __name__ == "__main__":
