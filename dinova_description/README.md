@@ -23,6 +23,8 @@
 > To distinguish between these urdf files, use the `dingo_real_urdf` argument. Its default value is `True`.
 
 ## Visualizing a robot model in RViz and `joint_state_gui_publisher`:
+The visualization launch files are `ONLY` for testing purposes. Do not use them with real robots or gazebo !!!
+
 To launch the visualization with `dinova`:
 ``` bash
    roslaunch dinova_description visualize_dinova.launch dingo_real_urdf:=false
@@ -37,7 +39,7 @@ To launch the visualization with `kinova` only:
 ```
 To launch the visualization with the lidar and dingo:
 ``` bash
-   roslaunch dingo_kinova_description visualize_dingo_omni.launch lidar:=true dingo_real_urdf:=false
+   roslaunch dinova_description visualize_dingo_omni.launch lidar:=true dingo_real_urdf:=false
 ```
 
 

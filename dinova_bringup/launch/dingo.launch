@@ -3,8 +3,10 @@
     <!-- Dingo params: Dont change! -->
     <arg name="motor_params" default="$(optenv DINGO_MOTOR_PARAMS base)" />
     <arg name="config" default="$(optenv DINGO_CONFIG base)" />
-    
+    <!-- Velodyne lidar -->
     <arg name="lidar" default="false"/>
+    <arg name="velodyne_frame_id" default="velodyne_base_link"/>
+
      <!-- Vicon -->
     <arg name="vicon" default="true" /> <!-- Change -->
     <arg name="object" default="mug1"/>
@@ -72,4 +74,11 @@
             <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
         </include>
     </group>
+
+    <!-- Vicon Nodes -->
+    <group if="$(arg lidar)">
+        <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+        </include>
+    </group>
+
 </launch>
