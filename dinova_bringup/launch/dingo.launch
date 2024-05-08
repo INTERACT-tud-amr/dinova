@@ -73,6 +73,7 @@
             <arg name="object_publish_topics"           value="$(arg object_publish_topics)"/>
             <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
         </include>
+        <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
     </group>
 
     <!-- Vicon Nodes -->
