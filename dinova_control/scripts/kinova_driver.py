@@ -72,12 +72,16 @@ class ControlInterface():
     def start_spin_loop(self):
         rate = rospy.Rate(PUBLISH_RATE)
         while not rospy.is_shutdown():
-            if not self.different_command_active:
-                if self.mode == "HLC_position":
-                    self.kinova.set_high_level_position(self.state.kinova_command.q)
-                elif self.mode == "HLC_velocity":
-                    self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
-         
+            if not self.emergency_switch_pressed:
+                if not self.different_command_active:
+                    if self.mode == "HLC_position":
+                        self.kinova.set_high_level_position(self.state.kinova_command.q)
+                    elif self.mode == "HLC_velocity":
+                        self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
+            else:
+                self.set_zero_velocity()
+                self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
+                
             self.publish_feedback()
             # if np.any(self.kinova.state.kinova_feedback.fault): #Wrong way to read error code
             #     msg_light = Lights()
@@ -126,7 +130,6 @@ class ControlInterface():
     def callback_emergency_switch(self, msg):
         if msg.buttons[4]:
             self.emergency_switch_pressed = True
-            self.set_zero_velocity()
         else:
             self.emergency_switch_pressed = False
 
