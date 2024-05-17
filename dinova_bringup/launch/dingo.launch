@@ -82,4 +82,8 @@
         </include>
     </group>
 
+    <!-- Vicon Publish robot pose to omni_states_vicon -->
+    <node name="dinova_state_publisher" pkg="dinova_control" type="dingo_state_publisher.py" args="" output="screen"/>
+
+
 </launch>
