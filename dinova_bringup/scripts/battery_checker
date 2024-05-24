@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+from typing import Union, Dict, List
+import rospy
+
+from std_msgs.msg import String
+from dingo_msgs.msg import Lights, RGB
+from sensor_msgs.msg import BatteryState
+
+
+from enum import Enum
+
+class LogMode(Enum):
+    TOPIC = "topic"
+    LOGINFO = "loginfo"
+    LOGWARN = "logwarn"
+    TERMINAL = "terminal"
+
+class Logger():
+    _name: str
+    _mode: LogMode
+    _rate: rospy.Rate
+
+    def __init__(self, name: str, mode: LogMode = LogMode.TERMINAL):
+        self._name = name
+        self._mode = mode
+        self._topic_name = self._name + "/log"
+
+        rospy.init_node(self._name)
+        self._rate = rospy.Rate(1)
+        self._debug_publisher = rospy.Publisher(
+            self._topic_name,
+            String,
+            queue_size=10
+        )
+
+
+    def log(self, message: str, mode: Union[None, LogMode] = None):
+        log_mode = mode if mode else self._mode
+        if log_mode == LogMode.TERMINAL:
+            print(f"{self._name}: {message}")
+        elif log_mode == LogMode.TOPIC:
+            try:
+                self._debug_publisher.publish(String(data=message))
+            except AttributeError as e:
+                rospy.logwarn(f"Message cannot be published as topic due to {e}")
+        elif log_mode == LogMode.LOGINFO:
+            rospy.loginfo(f"{self._name}: {message}")
+
+
+
+
+class BatteryChecker():
+
+    _name: str
+    _logger: Logger
+    _rate: rospy.Rate
+    _percentage: float = 100
+    _counter: int = 0
+    _color: List[int] = [255, 178, 0]
+
+    def __init__(self):
+        self._name = 'battery_checker'
+        self._logger = Logger(self._name, mode=LogMode.LOGINFO)
+        rospy.init_node(self._name)
+        self._rate = rospy.Rate(10)
+        self.init_light_msg()
+        self.establish_ros_connections()
+
+    def init_light_msg(self):
+        self._lights = Lights()
+        """
+        for i in range(4):
+            light = RGB()
+            self._lights.lights.append(light)
+        """
+
+    def establish_ros_connections(self):
+        rospy.Subscriber("battery/status", BatteryState, self._battery_state_callback)
+        self._light_pub = rospy.Publisher("/cmd_lights", Lights, queue_size=1)
+
+    def _battery_state_callback(self, data: BatteryState):
+        self._percentage = data.percentage
+
+    def blink_color(self):
+        lights = Lights()
+        for i in range(4):
+            lights.lights[i].red = self._color[0]
+            lights.lights[i].green = self._color[1]
+            lights.lights[i].blue = self._color[2]
+        self._light_pub.publish(lights)
+
+
+    def blink_white(self):
+        lights = Lights()
+        self._light_pub.publish(lights)
+
+    def blink_white_color(self):
+        self._counter += 1
+        if self._counter % 2 == 0:
+            self.blink_color()
+        else:
+            self.blink_white()
+
+
+
+    def run(self):
+        while not rospy.is_shutdown():
+            if self._percentage < 20:
+                self.blink_white_color()
+                rospy.logerr(f"Battery is low {self._percentage}")
+            self._rate.sleep()
+
+if __name__ == "__main__":
+    node = BatteryChecker()
+    try:
+        node.run()
+    except rospy.ROSInterruptException:
+        pass

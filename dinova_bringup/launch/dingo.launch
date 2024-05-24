@@ -64,6 +64,9 @@
         </node>
     </group>
 
+    <!-- Battery checking -->
+    <node pkg="dinova_bringup" type="battery_checker" name="battery_checker"/>
+
     <!-- Vicon Nodes -->
     <group if="$(arg vicon)">
         <include file="$(find dinova_bringup)/launch/vicon.launch">
