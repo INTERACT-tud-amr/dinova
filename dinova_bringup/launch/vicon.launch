@@ -22,14 +22,6 @@
 <!-- If we want to specify each object seperately and if we only want to publish specific objects-->
 <arg name="only_use_object_specific" default="true"/>
 
-<arg name="object_names" default="[dingo1, mug1]"/>
-<arg name="object_msg_types" default="[geometry_msgs/PoseStamped, geometry_msgs/PoseStamped]"/>
-<arg name="object_frame_ids" default="[map, map]"/>
-<arg name="object_publish_topics" default="[/vicon/dingo1, /vicon/mug1]"/>
-<arg name="object_frequency_divider" default="[2, 10]"/>
-
-
-
 
 <node pkg="vicon_bridge" type="vicon_bridge" name="vicon" output="screen" >
   <param name="stream_mode" value="ServerPush"/>
@@ -40,11 +32,6 @@
   <param name="publish_transform" value="$(arg publish_tf)"/>
   <param name="reset_z_axis" value="$(arg reset_z_axis)"/>
   <param name="only_use_object_specific" value="$(arg only_use_object_specific)"/>
-  <rosparam param="object_specific/object_names" subst_value="True">$(arg object_names)</rosparam>
-  <rosparam param="object_specific/object_msg_types" subst_value="True">$(arg object_msg_types)</rosparam>
-  <rosparam param="object_specific/object_frame_ids" subst_value="True">$(arg object_frame_ids)</rosparam>
-  <rosparam param="object_specific/object_publish_topics" subst_value="True">$(arg object_publish_topics)</rosparam>
-  <rosparam param="object_specific/object_frequency_divider" subst_value="True">$(arg object_frequency_divider)</rosparam>
 </node>
     
 </launch>
