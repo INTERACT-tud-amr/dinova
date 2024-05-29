@@ -18,6 +18,8 @@
     <arg name="object_publish_topics" default="[/vicon/$(env ROBOT_NAME), /vicon/$(arg object)]"/>
     <arg name="object_frequency_divider" default="[2, 10]"/>
     <param name="/vicon/use_vicon" type="bool" value="$(arg vicon)" />
+
+    <rosparam param="/object_names" subst_value="True">$(arg object_names)</rosparam> 
     <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
 
     <!-- Robot model -->
