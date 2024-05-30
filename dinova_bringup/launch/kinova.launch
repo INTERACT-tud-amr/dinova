@@ -1,12 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-     <!-- Vicon -->
-    <arg name="vicon" default="true" />
-    <arg name="object_names" default="[dingo1, mug1]"/>
-    <arg name="object_msg_types" default="[geometry_msgs/PoseStamped, geometry_msgs/PoseStamped]"/>
-    <arg name="object_frame_ids" default="[map, map]"/>
-    <arg name="object_publish_topics" default="[/vicon/dingo1, /vicon/mug1]"/>
-    <arg name="object_frequency_divider" default="[2, 10]"/>
 
 
     <!-- Robot model -->
@@ -18,19 +11,20 @@
     <!-- Teleoperation via joystick and rviz interactive markers -->
     <include file="$(find dingo_control)/launch/teleop.launch" />
 
+     <!-- Vicon -->
+    <arg name="vicon" default="true" />
+    <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
+    <param name="/vicon/use_vicon" type="bool" value="$(arg vicon)" />
+    <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
+
 
     <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
     <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
 
     <!-- Vicon Nodes -->
     <!-- <group if="$(eval arg('vicon') == 'true')">
-        <include file="$(find dinova_bringup)/launch/vicon.launch">
-            <arg name="object_names"                    value="$(arg object_names)"/>
-            <arg name="object_msg_types"                value="$(arg object_msg_types)"/>
-            <arg name="object_frame_ids"                value="$(arg object_frame_ids)"/>
-            <arg name="object_publish_topics"           value="$(arg object_publish_topics)"/>
-            <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
-        </include>
+        <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
+        <include file="$(find dinova_bringup)/launch/vicon.launch"/>
     </group> -->
 
 </launch>

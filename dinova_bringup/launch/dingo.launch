@@ -8,13 +8,8 @@
     <arg name="velodyne_frame_id" default="velodyne_base_link"/>
 
      <!-- Vicon -->
-    <arg name="vicon" default="true" /> <!-- Change -->
-    <arg name="object" default="mug1"/>
-    <arg name="object_names" default="[$(env ROBOT_NAME), $(arg object)]"/> <!-- Change -->
-    <arg name="object_msg_types" default="[geometry_msgs/PoseStamped, geometry_msgs/PoseStamped]"/>
-    <arg name="object_frame_ids" default="[map, map]"/>
-    <arg name="object_publish_topics" default="[/vicon/$(env ROBOT_NAME), /vicon/$(arg object)]"/>
-    <arg name="object_frequency_divider" default="[2, 10]"/>
+    <arg name="vicon" default="true" />
+    <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
     <param name="/vicon/use_vicon" type="bool" value="$(arg vicon)" />
     <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
 
@@ -69,13 +64,8 @@
 
     <!-- Vicon Nodes -->
     <group if="$(arg vicon)">
-        <include file="$(find dinova_bringup)/launch/vicon.launch">
-            <arg name="object_names"                    value="$(arg object_names)"/>
-            <arg name="object_msg_types"                value="$(arg object_msg_types)"/>
-            <arg name="object_frame_ids"                value="$(arg object_frame_ids)"/>
-            <arg name="object_publish_topics"           value="$(arg object_publish_topics)"/>
-            <arg name="object_frequency_divider"        value="$(arg object_frequency_divider)"/>
-        </include>
+        <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
+        <include file="$(find dinova_bringup)/launch/vicon.launch"/>
         <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
     </group>
 
