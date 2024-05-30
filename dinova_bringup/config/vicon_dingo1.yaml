@@ -1,21 +1,11 @@
 object_names:
   - "dingo1"
-  - "mug1"
-  - "dynamic_object1"
 object_msg_types: # "geometry_msgs/{PoseStamped,TransformStamped,PoseWithCovarianceStamped}"
-  - "geometry_msgs/PoseStamped"
-  - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
 object_frame_ids:
   - "map"
-  - "map"
-  - "map"
 object_frequency_divider:
-  - 2
-  - 2
   - 2
 object_publish_topics:
   - "/vicon/dingo1"
-  - "/vicon/mug1"
-  - "/vicon/obstacle1"
 
