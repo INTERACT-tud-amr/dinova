@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
-
+import numpy as np
 from sensor_msgs.msg import JointState
 from threading import Thread
 from nav_msgs.msg import Odometry
