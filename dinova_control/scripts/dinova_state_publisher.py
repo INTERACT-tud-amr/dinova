@@ -34,28 +34,35 @@ class DinovaStatePublisher():
         self.dingo_vicon_state = self.init_dingo_joint_state_var()
     
     def callback_vicon(self, msg):
-        js_msg = JointState()
-        js_msg.header.stamp = rospy.Time.now()
-        # Dingo
-        js_msg.name.append("omni_joint_x")
-        js_msg.position.append(msg.pose.position.x)
-        js_msg.velocity.append(self.dingo_base_state.velocity[0])
-        js_msg.effort.append(0.0)
-         # omni_joint_y
-        js_msg.name.append("omni_joint_y")
-        js_msg.position.append(msg.pose.position.y)
-        js_msg.velocity.append(self.dingo_base_state.velocity[1])
-        js_msg.effort.append(0.0)
-        # omni_joint_theta
-        js_msg.name.append("omni_joint_theta")
         theta = tf.transformations.euler_from_quaternion([msg.pose.orientation.x,
                                                           msg.pose.orientation.y,
                                                           msg.pose.orientation.z,
                                                           msg.pose.orientation.w])[2]
+        js_msg = JointState()
+        js_msg.header.stamp = rospy.Time.now()
+        velocities_robot_frame = self.dingo_base_state.velocity[0:2]
+        rotation = np.array([
+            [np.cos(theta), -np.sin(theta)], 
+            [np.sin(theta), np.cos(theta)], 
+        ])
+        velocities_vicon_frame = np.dot(rotation, velocities_robot_frame)
+        # Dingo
+        js_msg.name.append("omni_joint_x")
+        js_msg.position.append(msg.pose.position.x)
+        js_msg.velocity.append(velocities_vicon_frame[0])
+        js_msg.effort.append(0.0)
+         # omni_joint_y
+        js_msg.name.append("omni_joint_y")
+        js_msg.position.append(msg.pose.position.y)
+        js_msg.velocity.append(velocities_vicon_frame[1])
+        js_msg.effort.append(0.0)
+        # omni_joint_theta
+        js_msg.name.append("omni_joint_theta")
     
         js_msg.position.append(theta)
         js_msg.velocity.append(self.dingo_base_state.velocity[2])
         js_msg.effort.append(0.0)
+
         # Kinova
         for i in range(self.n_dofs_kinova):
             name = "joint_" + str(i+1)
