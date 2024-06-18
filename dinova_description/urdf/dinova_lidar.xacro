@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot name="dinova" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="robot_id" default="" />
+    <xacro:arg name="load_gripper" default="true"/>
+    <xacro:arg name="dingo_real_urdf" default="true"/>
+
+    <!-- Add dingo -->
+    <xacro:if value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/real_dingo-o.urdf.xacro" />
+    </xacro:if>
+    <xacro:unless value="$(arg dingo_real_urdf)">
+        <xacro:include filename="$(find dinova_description)/urdf/dingo_omni_macro.xacro"/>
+        <xacro:dingo_omni prefix="$(arg robot_id)"/>
+        
+        <link name="world"/>
+        <joint name="$(arg robot_id)world_link" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="world"/>
+            <child link="$(arg robot_id)base_link"/>
+        </joint>
+    </xacro:unless>
+
+
+    <!-- Add kinova -->
+    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
+    <xacro:kinova prefix="$(arg robot_id)"/>
+
+
+    <!-- Add kinova gripper -->
+    <xacro:if value="$(arg load_gripper)">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova_gripper_macro.xacro"/>
+        <xacro:kinova_gripper prefix="$(arg robot_id)"/>
+
+        <joint name="$(arg robot_id)arm_gripper_base_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="$(arg robot_id)dummy_link"/>
+            <child link="$(arg robot_id)gripper_base_link"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+    </xacro:if>
+
+    <!-- Connection between dingo and kinova -->
+    <joint name="$(arg robot_id)arm_mount_lidar" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.314"/>
+        <parent link="$(arg robot_id)front_b_mount"/>
+        <child link="$(arg robot_id)lidar_link"/>
+    </joint>
+    <link name="lidar_link">
+        <visual>
+          <origin rpy="0 0 0" xyz="0 0 -0.1552"/>
+          <geometry>
+            <cylinder length="0.314" radius="0.08"/>
+          </geometry>
+          <material name="black"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 -0.1552"/>
+            <geometry>
+                <cylinder length="0.314" radius="0.08"/>
+            </geometry>
+          </collision>
+        <inertial>
+          <origin rpy="0 0 0" xyz="0 0 0"/>
+          <mass value="0.4"/>
+          <inertia ixx="0.0003234" ixy="0" ixz="0" iyy="0.0003234" iyz="0" izz="0.0004901"/>
+        </inertial>
+      </link>
+    <joint name="$(arg robot_id)arm_mount_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.0"/>
+        <parent link="$(arg robot_id)lidar_link"/>
+        <child link="$(arg robot_id)kinova_base_link"/>
+    </joint>
+  
+
+</robot>
