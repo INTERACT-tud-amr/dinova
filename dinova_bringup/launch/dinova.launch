@@ -8,7 +8,7 @@
                         For Gazebo set it to false -->
     <arg name="dingo_real_urdf" default="true" />
     <arg name="load_gripper" default="true" />
-    <arg name="lidar" default="false"/>
+    <arg name="lidar" default="true"/>
 
      <!-- Vicon -->
     <arg name="vicon" default="true" />
@@ -79,6 +79,9 @@
     </group>
     
     <!-- Lidar Nodes -->
+    <param name="lidar" value="$(arg lidar)" />
+    <param name="robot_name" value="$(env ROBOT_NAME))" />
+
     <!-- <group if="$(arg lidar)">
         <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
         </include>

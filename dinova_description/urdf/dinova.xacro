@@ -5,7 +5,7 @@
     <xacro:arg name="dingo_real_urdf" default="true"/>
     <xacro:arg name="lidar" default="true"/>
 
-    <xacro:property name="platform_height" value="0.34" />
+    <xacro:property name="platform_height" value="0.314" />
 
     <!-- Add dingo -->
     <xacro:if value="$(arg dingo_real_urdf)">
@@ -44,11 +44,6 @@
 
     <!-- Check lidar option -->
     <xacro:if value="$(arg lidar)">
-        <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
-        <xacro:VLP-16 parent="$(arg robot_id)front_b_mount" name="$(arg robot_id)velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="false" min_range="0.4" >
-            <origin xyz="0 0 0" rpy="0 0 0" />
-        </xacro:VLP-16>
-
         <!-- Metal platform -->
         <link name="$(arg robot_id)platform_link">
             <visual>
@@ -73,7 +68,7 @@
             </inertial>
          </link>
 
-        <!-- Connection between dingo and kinova -->
+        <!-- Connection between dingo and platform -->
         <joint name="$(arg robot_id)platform_mount_joint" type="fixed">
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <parent link="$(arg robot_id)front_b_mount"/>
@@ -88,6 +83,11 @@
             <parent link="$(arg robot_id)front_b_mount"/>
             <child link="$(arg robot_id)kinova_base_link"/>
         </joint>
+
+        <!-- <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+        <xacro:VLP-16 parent="$(arg robot_id)front_b_mount" name="$(arg robot_id)velodyne" topic="/$(arg robot_id)/velodyne_points" hz="10" samples="440" gpu="false" min_range="0.4" >
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:VLP-16> -->
 
     </xacro:if>
     <xacro:unless value="$(arg lidar)">
