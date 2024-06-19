@@ -78,7 +78,7 @@
     
     </group>
     
-    <!-- Vicon Nodes -->
+    <!-- Lidar Nodes -->
     <!-- <group if="$(arg lidar)">
         <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
         </include>

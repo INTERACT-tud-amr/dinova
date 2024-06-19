@@ -69,7 +69,7 @@
         <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
     </group>
 
-    <!-- Vicon Nodes -->
+    <!-- LIDAR Nodes -->
     <group if="$(arg lidar)">
         <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
         </include>
