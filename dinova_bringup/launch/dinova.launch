@@ -8,7 +8,7 @@
                         For Gazebo set it to false -->
     <arg name="dingo_real_urdf" default="true" />
     <arg name="load_gripper" default="true" />
-    <arg name="urdf_lidar" default="false" />
+    <arg name="lidar" default="false"/>
 
      <!-- Vicon -->
     <arg name="vicon" default="true" />
@@ -17,19 +17,11 @@
     <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
 
     <!-- Robot model -->
-    <!-- <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
-                                            dingo_real_urdf:=$(arg dingo_real_urdf)
-                                            load_gripper:=$(arg load_gripper)"/> -->
-    <group if="$(arg urdf_lidar)">
-        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova_lidar.xacro'
-                                        dingo_real_urdf:=$(arg dingo_real_urdf)
-                                        load_gripper:=$(arg load_gripper)"/>
-        </group>
-        <group unless="$(arg urdf_lidar)">
-            <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
                 dingo_real_urdf:=$(arg dingo_real_urdf)
-                load_gripper:=$(arg load_gripper)"/>
-        </group>
+                load_gripper:=$(arg load_gripper)
+                lidar:=$(arg lidar)"/>
+    
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
         <remap from="/joint_states" to="/dinova/joint_states" />
     </node>
@@ -86,6 +78,11 @@
     
     </group>
     
+    <!-- Vicon Nodes -->
+    <!-- <group if="$(arg lidar)">
+        <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+        </include>
+    </group> -->
 
 
 </launch>

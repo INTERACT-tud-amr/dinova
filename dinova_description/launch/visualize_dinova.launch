@@ -3,12 +3,14 @@
     <arg name="robot_id" default="" />
     <arg name="dingo_real_urdf" default="true" />
     <arg name="load_gripper" default="true" />
+    <arg name="lidar" default="false" />
 
 
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find dinova_description)/urdf/dinova.xacro'
             robot_id:=$(arg robot_id)
             load_gripper:=$(arg load_gripper)
-            dingo_real_urdf:=$(arg dingo_real_urdf)"/>
+            dingo_real_urdf:=$(arg dingo_real_urdf)
+            lidar:=$(arg lidar)"/>
 
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
    
