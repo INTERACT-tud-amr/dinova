@@ -1,0 +1,30 @@
+<launch>
+  <arg name="config_extras"
+       default="$(eval optenv('DINGO_CONFIG_EXTRAS', find('dingo_control') + '/config/empty.yaml'))"/>
+
+  <group if="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" file="$(find dingo_control)/config/control_omni.yaml" />
+  </group>
+  <group unless="$(optenv DINGO_OMNI 0)">
+    <rosparam command="load" file="$(find dingo_control)/config/control_diff.yaml" />
+  </group>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="dingo_joint_publisher dingo_velocity_controller" />
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+    <rosparam command="load" file="$(find dingo_control)/config/robot_localization.yaml" />
+    <remap from="/imu/data" to="imu/data" />
+    <remap from="/dingo_velocity_controller/odom" to="dingo_velocity_controller/odom" />
+    <remap from="/diagnostics" to="diagnostics" />
+  </node>
+
+  <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+    <rosparam command="load" file="$(find dingo_control)/config/twist_mux.yaml" />
+    <remap from="cmd_vel_out" to="dingo_velocity_controller/cmd_vel"/>
+    <remap from="/diagnostics" to="diagnostics" />
+  </node>
+
+  <rosparam command="load" file="$(arg config_extras)" subst_value="true" />
+
+</launch>

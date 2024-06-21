@@ -24,27 +24,27 @@ class ControlInterface():
     def __init__(self, mode="HLC_velocity") -> None:
         self.mode = mode
 
-        self.pub_feedback = rospy.Publisher('/kinova/joint_states', JointState, queue_size=10)
-        rospy.Subscriber("/kinova/command", Float64MultiArray, self.callback_command)
-        rospy.Subscriber("/kinova/error_ack", Empty, self.callback_error_ack)
+        self.pub_feedback = rospy.Publisher('kinova/joint_states', JointState, queue_size=10)
+        rospy.Subscriber("kinova/command", Float64MultiArray, self.callback_command)
+        rospy.Subscriber("kinova/error_ack", Empty, self.callback_error_ack)
 
         # Emergency switch
-        rospy.Subscriber("/bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
+        rospy.Subscriber("bluetooth_teleop/joy", Joy, self.callback_emergency_switch)
         self.emergency_switch_pressed = False
         # Dingo lights
         # self.pub_dingo_lights = rospy.Publisher('/cmd_lights', Lights, queue_size=10)
 
         # Services for setting predefined joint positions
-        rospy.Service("/kinova/go_home_position", Trigger, self.handle_go_home_pos)
-        rospy.Service("/kinova/go_zero_position", Trigger, self.handle_go_zero_pos)
+        rospy.Service("kinova/go_home_position", Trigger, self.handle_go_home_pos)
+        rospy.Service("kinova/go_zero_position", Trigger, self.handle_go_zero_pos)
         # Services for changing control modes
-        # rospy.Service("/kinova/change_to_LLC_position", Trigger, self.handle_LLC_position)
-        # rospy.Service("/kinova/change_to_LLC_velocity", Trigger, self.handle_LLC_velocity)
-        rospy.Service("/kinova/change_to_HLC_position", Trigger, self.handle_HLC_position)
-        rospy.Service("/kinova/change_to_HLC_velocity", Trigger, self.handle_HLC_velocity)
+        # rospy.Service("kinova/change_to_LLC_position", Trigger, self.handle_LLC_position)
+        # rospy.Service("kinova/change_to_LLC_velocity", Trigger, self.handle_LLC_velocity)
+        rospy.Service("kinova/change_to_HLC_position", Trigger, self.handle_HLC_position)
+        rospy.Service("kinova/change_to_HLC_velocity", Trigger, self.handle_HLC_velocity)
         # Gripper
-        rospy.Service("/kinova/gripper/open", Trigger, self.handle_gripper_open)
-        rospy.Service("/kinova/gripper/close", Trigger, self.handle_gripper_close)
+        rospy.Service("kinova/gripper/open", Trigger, self.handle_gripper_open)
+        rospy.Service("kinova/gripper/close", Trigger, self.handle_gripper_close)
 
 
         self.state = State()
@@ -52,8 +52,8 @@ class ControlInterface():
 
         """Start the robot """
         with DeviceConnection.createTcpConnection() as router, DeviceConnection.createUdpConnection() as real_time_router:
-            alpha_dq = rospy.get_param("/kinova_feedback/alpha_dq")
-            alpha_torque = rospy.get_param("/kinova_feedback/alpha_torque")
+            alpha_dq = rospy.get_param("kinova_feedback/alpha_dq")
+            alpha_torque = rospy.get_param("kinova_feedback/alpha_torque")
             self.kinova = KinovaRobot(router=router, 
                                       real_time_router=real_time_router, 
                                       state = self.state, 
