@@ -12,12 +12,12 @@
   <node name="controller_spawner" pkg="controller_manager" type="spawner"
         args="dingo_joint_publisher dingo_velocity_controller" />
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+  <!--node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
     <rosparam command="load" file="$(find dingo_control)/config/robot_localization.yaml" />
     <remap from="/imu/data" to="imu/data" />
     <remap from="/dingo_velocity_controller/odom" to="dingo_velocity_controller/odom" />
     <remap from="/diagnostics" to="diagnostics" />
-  </node>
+  </node-->
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
     <rosparam command="load" file="$(find dingo_control)/config/twist_mux.yaml" />
