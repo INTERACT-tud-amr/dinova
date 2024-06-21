@@ -27,6 +27,7 @@
                     lidar:=$(arg lidar)"/>
         
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+	    <param name="tf_prefix" value="$(env ROBOT_NAME)"/>
             <remap from="joint_states" to="dinova/joint_states" />
         </node>
 
@@ -86,7 +87,7 @@
         <group if="$(arg vicon)">
             <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
             <include file="$(find dinova_bringup)/launch/vicon.launch"/>
-            <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
+	    <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) $(env ROBOT_NAME)/base_link 0.1" />
         </group>
     
     </group>
