@@ -17,8 +17,8 @@
         <param name="robot_name" value="$(env ROBOT_NAME)" />
 
         <!-- Vicon -->
-        <param name="/vicon/use_vicon" type="bool" value="$(arg vicon)" />
-        <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
+        <param name="vicon/use_vicon" type="bool" value="$(arg vicon)" />
+        <param name="vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
 
         <!-- Robot model -->
         <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/dinova.xacro'
@@ -27,7 +27,7 @@
                     lidar:=$(arg lidar)"/>
         
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-            <remap from="/joint_states" to="/dinova/joint_states" />
+            <remap from="joint_states" to="dinova/joint_states" />
         </node>
 
         <!-- DINGO Nodes -->
@@ -81,13 +81,14 @@
         <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
         <node name="dinova_control" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
         <node name="dinova_state_publisher" pkg="dinova_control" type="dinova_state_publisher.py" args="" output="screen"/>
-    </group>
 
-    <!-- Vicon nodes -->
-    <group if="$(arg vicon)">
-        <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
-        <include file="$(find dinova_bringup)/launch/vicon.launch"/>
-        <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
+        <!-- Vicon nodes -->
+        <group if="$(arg vicon)">
+            <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
+            <include file="$(find dinova_bringup)/launch/vicon.launch"/>
+            <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
+        </group>
+    
     </group>
 
     <!-- <group if="$(arg lidar)">

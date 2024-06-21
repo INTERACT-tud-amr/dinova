@@ -13,9 +13,9 @@ class DinovaStatePublisher():
         self.pub_dinova_state = rospy.Publisher('dinova/joint_states', JointState, queue_size=1)
         self.pub_dinova_omni_state = rospy.Publisher('dinova/omni_states', JointState, queue_size=1) #TODO
 
-        if rospy.get_param("/vicon/use_vicon"):
+        if rospy.get_param("vicon/use_vicon"):
             self.pub_dinova_omni_state_vicon = rospy.Publisher('dinova/omni_states_vicon', JointState, queue_size=1) #TODO
-            rospy.Subscriber(rospy.get_param("/vicon/dingo_topic"), PoseStamped, self.callback_vicon)
+            rospy.Subscriber(rospy.get_param("vicon/dingo_topic"), PoseStamped, self.callback_vicon)
 
 
         rospy.Subscriber("odometry/filtered", Odometry, self.callback_odometry)
