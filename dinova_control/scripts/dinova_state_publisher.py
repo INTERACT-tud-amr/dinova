@@ -10,18 +10,18 @@ from geometry_msgs.msg import PoseStamped, Pose
 
 class DinovaStatePublisher():
     def __init__(self) -> None:
-        self.pub_dinova_state = rospy.Publisher('/dinova/joint_states', JointState, queue_size=1)
-        self.pub_dinova_omni_state = rospy.Publisher('/dinova/omni_states', JointState, queue_size=1) #TODO
+        self.pub_dinova_state = rospy.Publisher('dinova/joint_states', JointState, queue_size=1)
+        self.pub_dinova_omni_state = rospy.Publisher('dinova/omni_states', JointState, queue_size=1) #TODO
 
-        if rospy.get_param("/vicon/use_vicon"):
-            self.pub_dinova_omni_state_vicon = rospy.Publisher('/dinova/omni_states_vicon', JointState, queue_size=1) #TODO
-            rospy.Subscriber(rospy.get_param("/vicon/dingo_topic"), PoseStamped, self.callback_vicon)
+        if rospy.get_param("vicon/use_vicon"):
+            self.pub_dinova_omni_state_vicon = rospy.Publisher('dinova/omni_states_vicon', JointState, queue_size=1) #TODO
+            rospy.Subscriber(rospy.get_param("vicon/dingo_topic"), PoseStamped, self.callback_vicon)
 
 
-        rospy.Subscriber("/odometry/filtered", Odometry, self.callback_odometry)
+        rospy.Subscriber("odometry/filtered", Odometry, self.callback_odometry)
 
-        rospy.Subscriber("/joint_states", JointState, self.callback_dingo_state)
-        rospy.Subscriber("/kinova/joint_states", JointState, self.callback_kinova_state)
+        rospy.Subscriber("joint_states", JointState, self.callback_dingo_state)
+        rospy.Subscriber("kinova/joint_states", JointState, self.callback_kinova_state)
 
         self.n_dofs_dingo_wheels = 4
         self.n_dofs_dingo_omni = 3
