@@ -78,7 +78,7 @@
         <group if="$(arg vicon)">
             <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
             <include file="$(find dinova_bringup)/launch/vicon.launch"/>
-            <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) base_link 0.1" />
+            <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) $(env ROBOT_NAME)/base_link 0.1" />
         </group>
 
         <!-- LIDAR Nodes -->
