@@ -24,11 +24,15 @@ The default config for Vicon consists of the robot and the `mug1` object. To cha
 
 To launch the control interface for Dinova with Vicon: 
 ``` bash
-roslaunch dinova_bringup dinova.launch vicon:=true
+roslaunch dinova_bringup dinova.launch
 ```
 To launch the control interface for Dingo with Vicon: 
 ``` bash
-roslaunch dinova_bringup dingo.launch vicon:=true
+roslaunch dinova_bringup dingo.launch
+```
+To launch the control interface for Dinova with Vicon and an (unactive) lidar-stack: 
+``` bash
+roslaunch dinova_bringup dinova.launch lidar:=true
 ```
 
 ## Description
