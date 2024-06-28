@@ -1,30 +1,35 @@
 <?xml version="1.0"?>
 <launch>
-
-
-    <!-- Robot model -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro'"/>
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-        <remap from="/joint_states" to="/kinova/joint_states" />
-    </node>
-
-    <!-- Teleoperation via joystick and rviz interactive markers -->
-    <include file="$(find dingo_control)/launch/teleop.launch" />
-
-     <!-- Vicon -->
-    <arg name="vicon" default="true" />
+    <!-- Vicon -->
+    <arg name="vicon" default="false" />
     <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
-    <param name="/vicon/use_vicon" type="bool" value="$(arg vicon)" />
-    <param name="/vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
+
+    <group ns="$(env ROBOT_NAME)">      
+        <param name="vicon/use_vicon" type="bool" value="$(arg vicon)" />
+        <param name="vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
+
+        <!-- Robot model -->
+        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro'"/>
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+            <remap from="joint_states" to="kinova/joint_states" />
+            <param name="tf_prefix" value="$(env ROBOT_NAME)"/>
+        </node>
+
+        <!-- Teleoperation via joystick and rviz interactive markers -->
+        <include file="$(find dinova_control)/launch/dingo_teleop.launch" />
 
 
-    <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
-    <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
+        <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
+        <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
 
-    <!-- Vicon Nodes -->
-    <!-- <group if="$(eval arg('vicon') == 'true')">
-        <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
-        <include file="$(find dinova_bringup)/launch/vicon.launch"/>
-    </group> -->
+        <!-- Vicon Nodes -->
+        <group if="$(arg vicon)">
+            <rosparam ns="vicon/object_specific" command="load" file="$(arg vicon_config_file)"/>
+            <include file="$(find dinova_bringup)/launch/vicon.launch"/>
+            <!-- TODO: modify this -->
+            <!-- <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) $(env ROBOT_NAME)/base_link 0.1" /> -->
+        </group>
+
+    </group>
 
 </launch>

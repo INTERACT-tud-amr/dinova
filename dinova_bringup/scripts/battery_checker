@@ -76,7 +76,7 @@ class BatteryChecker():
 
     def establish_ros_connections(self):
         rospy.Subscriber("battery/status", BatteryState, self._battery_state_callback)
-        self._light_pub = rospy.Publisher("/cmd_lights", Lights, queue_size=1)
+        self._light_pub = rospy.Publisher("cmd_lights", Lights, queue_size=1)
 
     def _battery_state_callback(self, data: BatteryState):
         self._percentage = data.percentage
