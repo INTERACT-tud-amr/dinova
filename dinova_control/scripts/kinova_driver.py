@@ -37,6 +37,8 @@ class ControlInterface():
         # Services for setting predefined joint positions
         rospy.Service("kinova/go_home_position", Trigger, self.handle_go_home_pos)
         rospy.Service("kinova/go_zero_position", Trigger, self.handle_go_zero_pos)
+        rospy.Service("kinova/go_start_position", Trigger, self.handle_go_start_pos)
+
         # Services for changing control modes
         # rospy.Service("kinova/change_to_LLC_position", Trigger, self.handle_LLC_position)
         # rospy.Service("kinova/change_to_LLC_velocity", Trigger, self.handle_LLC_velocity)
@@ -66,8 +68,8 @@ class ControlInterface():
 
 
     def start_threads(self):
-        spin_thread = Thread(target=self.start_spin_loop)
-        spin_thread.start()
+        self.spin_thread = Thread(target=self.start_spin_loop)
+        self.spin_thread.start()
     
     def start_spin_loop(self):
         rate = rospy.Rate(PUBLISH_RATE)
@@ -83,12 +85,7 @@ class ControlInterface():
                 self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
                 
             self.publish_feedback()
-            # if np.any(self.kinova.state.kinova_feedback.fault): #Wrong way to read error code
-            #     msg_light = Lights()
-            #     for i in range(4):
-            #         msg_light.lights[i].red = 1.
-            #     self.pub_dingo_lights.publish(msg_light)
-
+         
             rate.sleep()
 
         if rospy.is_shutdown():
@@ -136,6 +133,12 @@ class ControlInterface():
 
     def callback_error_ack(self, msg):
         self.kinova.clear_faults()
+        self.spin_thread.join()
+        self.kinova.stop_feedback()
+        self.kinova.stop_arm()
+        self.start_threads()
+        self.kinova.start_feedback()
+
 
     
     def handle_go_home_pos(self, req):
@@ -153,6 +156,14 @@ class ControlInterface():
         success = self.kinova.set_high_level_position(self.state.kinova_command.q)
         self.different_command_active = False
         return success, "Zero position reached"
+    
+    def handle_go_start_pos(self, req):
+        self.different_command_active = True
+        self.state.kinova_command.q = np.rad2deg([0, 0, 0, 1.7, np.pi/2, -np.pi/2])
+        self.state.kinova_command.dq = self.kinova.actuator_count * [0.]
+        success = self.kinova.set_high_level_position(self.state.kinova_command.q)
+        self.different_command_active = False
+        return success, "Start position reached"
 
     def handle_HLC_position(self, req):
         self.mode = "HLC_position"
