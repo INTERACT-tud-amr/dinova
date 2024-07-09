@@ -37,6 +37,8 @@ class ControlInterface():
         # Services for setting predefined joint positions
         rospy.Service("kinova/go_home_position", Trigger, self.handle_go_home_pos)
         rospy.Service("kinova/go_zero_position", Trigger, self.handle_go_zero_pos)
+        rospy.Service("kinova/go_start_position", Trigger, self.handle_go_start_pos)
+
         # Services for changing control modes
         # rospy.Service("kinova/change_to_LLC_position", Trigger, self.handle_LLC_position)
         # rospy.Service("kinova/change_to_LLC_velocity", Trigger, self.handle_LLC_velocity)
@@ -153,6 +155,14 @@ class ControlInterface():
         success = self.kinova.set_high_level_position(self.state.kinova_command.q)
         self.different_command_active = False
         return success, "Zero position reached"
+    
+    def handle_go_start_pos(self, req):
+        self.different_command_active = True
+        self.state.kinova_command.q = [0, 0, 0, 1.7, np.pi/2, -np.pi/2]
+        self.state.kinova_command.dq = self.kinova.actuator_count * [0.]
+        success = self.kinova.set_high_level_position(self.state.kinova_command.q)
+        self.different_command_active = False
+        return success, "Start position reached"
 
     def handle_HLC_position(self, req):
         self.mode = "HLC_position"
