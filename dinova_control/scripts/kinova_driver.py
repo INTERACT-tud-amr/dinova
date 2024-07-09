@@ -159,7 +159,7 @@ class ControlInterface():
     
     def handle_go_start_pos(self, req):
         self.different_command_active = True
-        self.state.kinova_command.q = [0, 0, 0, 1.7, np.pi/2, -np.pi/2]
+        self.state.kinova_command.q = np.rad2deg([0, 0, 0, 1.7, np.pi/2, -np.pi/2])
         self.state.kinova_command.dq = self.kinova.actuator_count * [0.]
         success = self.kinova.set_high_level_position(self.state.kinova_command.q)
         self.different_command_active = False
