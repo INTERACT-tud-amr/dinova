@@ -68,8 +68,8 @@ class ControlInterface():
 
 
     def start_threads(self):
-        spin_thread = Thread(target=self.start_spin_loop)
-        spin_thread.start()
+        self.spin_thread = Thread(target=self.start_spin_loop)
+        self.spin_thread.start()
     
     def start_spin_loop(self):
         rate = rospy.Rate(PUBLISH_RATE)
@@ -85,12 +85,7 @@ class ControlInterface():
                 self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
                 
             self.publish_feedback()
-            # if np.any(self.kinova.state.kinova_feedback.fault): #Wrong way to read error code
-            #     msg_light = Lights()
-            #     for i in range(4):
-            #         msg_light.lights[i].red = 1.
-            #     self.pub_dingo_lights.publish(msg_light)
-
+         
             rate.sleep()
 
         if rospy.is_shutdown():
@@ -138,6 +133,12 @@ class ControlInterface():
 
     def callback_error_ack(self, msg):
         self.kinova.clear_faults()
+        self.spin_thread.join()
+        self.kinova.stop_feedback()
+        self.kinova.stop_arm()
+        self.start_threads()
+        self.kinova.start_feedback()
+
 
     
     def handle_go_home_pos(self, req):
