@@ -15,6 +15,7 @@
 
 ## Requirements
 ``` bash
+sudo apt install ros-${ROS_DISTRO}-ros-controllers
 sudo apt install ros-${ROS_DISTRO}-gazebo-ros-control
 sudo apt install ros-${ROS_DISTRO}-velocity-controllers
 sudo apt install ros-${ROS_DISTRO}-velodyne-gazebo-plugins
