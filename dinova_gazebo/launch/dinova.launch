@@ -20,8 +20,8 @@
                 -J $(arg dingo_id)omni_joint_theta 0.0
                 -J $(arg dingo_id)joint_1 0.0
                 -J $(arg dingo_id)joint_2 0.0
-                -J $(arg dingo_id)joint_3 1.57
-                -J $(arg dingo_id)joint_4 1.57
+                -J $(arg dingo_id)joint_3 0.0
+                -J $(arg dingo_id)joint_4 1.7
                 -J $(arg dingo_id)joint_5 1.57
                 -J $(arg dingo_id)joint_6 -1.57
                 -J $(arg dingo_id)right_finger_bottom_joint 0.001" 
