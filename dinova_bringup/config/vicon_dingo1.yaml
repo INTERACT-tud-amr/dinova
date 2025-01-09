@@ -3,11 +3,15 @@ object_names:
   - "dingo2"
   - "tablesmall_1"
   - "tablesmall_2"
+  - "table_ramp"
   - "cup1"
   - "cup2"
   - "wineglass"
+  - "block_red"
   - "dynamic_object2"
 object_msg_types: # "geometry_msgs/{PoseStamped,TransformStamped,PoseWithCovarianceStamped}"
+  - "geometry_msgs/PoseStamped"
+  - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
@@ -25,7 +29,11 @@ object_frame_ids:
   - "map"
   - "map"
   - "map"
+  - "map"
+  - "map"
 object_frequency_divider:
+  - 2
+  - 2
   - 2
   - 2
   - 2
@@ -39,7 +47,9 @@ object_publish_topics:
   - "/vicon/dingo2"
   - "/vicon/tablesmall_1"
   - "/vicon/tablesmall_2"
+  - "/vicon/table_ramp"
   - "/vicon/cup1"
   - "/vicon/cup2"
   - "/vicon/wineglass"
+  - "/vicon/block_red"
   - "/vicon/dynamic_object2"
