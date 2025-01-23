@@ -5,7 +5,7 @@
     <xacro:arg name="dingo_real_urdf" default="true"/>
     <xacro:arg name="lidar" default="true"/>
 
-    <xacro:property name="platform_height" value="0.314" />
+    <xacro:property name="platform_height" value="0.279" />
 
     <!-- Add dingo -->
     <xacro:if value="$(arg dingo_real_urdf)">
@@ -79,7 +79,7 @@
 
         <!-- Connection between dingo and kinova -->
         <joint name="$(arg robot_id)arm_mount_joint" type="fixed">
-            <origin rpy="0 0 0" xyz="0 0 ${platform_height}"/>
+            <origin rpy="0 0 0" xyz="0.0399 0 ${platform_height}"/>
             <parent link="$(arg robot_id)front_b_mount"/>
             <child link="$(arg robot_id)kinova_base_link"/>
         </joint>
