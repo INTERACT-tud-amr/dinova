@@ -8,6 +8,8 @@ from nav_msgs.msg import Odometry
 import tf
 from geometry_msgs.msg import PoseStamped, Pose
 import numpy as np
+import time
+import copy
 
 class DingoStatePublisher():
     def __init__(self) -> None:
@@ -28,6 +30,10 @@ class DingoStatePublisher():
         self.dingo_omni_names = ["omni_joint_x", "omni_joint_y", "omni_joint_theta"]
         self.dingo_base_state = self.init_dingo_joint_state_var()
         self.dingo_vicon_state = self.init_dingo_joint_state_var()
+        self.time_previous = 0.
+        self.base_vel = np.array([0., 0., 0.])
+        self.position_previous = []
+        self.alpha_vel = 0.5 # for filtering velocities from vicon
     
     def callback_vicon(self, msg):
         theta = tf.transformations.euler_from_quaternion([msg.pose.orientation.x,
@@ -58,7 +64,22 @@ class DingoStatePublisher():
         js_msg.position.append(theta)
         js_msg.velocity.append(self.dingo_base_state.velocity[2])
         js_msg.effort.append(0.0)
+        js_msg.velocity = self.generate_velocities_from_vicon(js_msg)
         self.pub_dinova_omni_state_vicon.publish(js_msg)
+        
+    def generate_velocities_from_vicon(self, js_msg):
+        if self.position_previous == []:
+            self.position_previous = js_msg.position
+            self.time_previous = time.perf_counter()
+            return list(self.base_vel)
+        
+        time_current = time.perf_counter()
+        vel_current = (np.array(js_msg.position) - np.array(self.position_previous))/(time_current - self.time_previous)
+        self.base_vel = self.alpha_vel*vel_current + (1-self.alpha_vel)*copy.deepcopy(self.base_vel)
+        self.position_previous = js_msg.position
+        self.time_previous = copy.deepcopy(time_current)
+        return list(self.base_vel)
+        
     
     def callback_odometry(self, msg):
         self.publish_omni_dinova_state(msg)

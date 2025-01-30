@@ -7,6 +7,8 @@ from threading import Thread
 from nav_msgs.msg import Odometry
 import tf
 from geometry_msgs.msg import PoseStamped, Pose
+import time
+import copy
 
 class DinovaStatePublisher():
     def __init__(self) -> None:
@@ -32,6 +34,11 @@ class DinovaStatePublisher():
         self.kinova_act_state = self.init_kinova_joint_state_var()
         self.dingo_base_state = self.init_dingo_joint_state_var()
         self.dingo_vicon_state = self.init_dingo_joint_state_var()
+        
+        self.time_previous = 0.
+        self.base_vel = np.array([0., 0., 0.])
+        self.position_previous = []
+        self.alpha_vel = 0.5 # for filtering velocities from vicon
     
     def callback_vicon(self, msg):
         theta = tf.transformations.euler_from_quaternion([msg.pose.orientation.x,
@@ -62,6 +69,7 @@ class DinovaStatePublisher():
         js_msg.position.append(theta)
         js_msg.velocity.append(self.dingo_base_state.velocity[2])
         js_msg.effort.append(0.0)
+        js_msg.velocity = self.generate_velocities_from_vicon(js_msg)[0:3]
 
         # Kinova
         for i in range(self.n_dofs_kinova):
@@ -154,6 +162,20 @@ class DinovaStatePublisher():
         js_msg.velocity.append(self.kinova_act_state.velocity[-1])
         js_msg.effort.append(self.kinova_act_state.effort[-1])
         self.pub_dinova_omni_state.publish(js_msg)
+        
+    def generate_velocities_from_vicon(self, js_msg):
+        if self.position_previous == []:
+            self.position_previous = js_msg.position
+            self.time_previous = time.perf_counter()
+            return list(self.base_vel)
+        
+        time_current = time.perf_counter()
+        vel_current = (np.array(js_msg.position[:3]) - np.array(self.position_previous[:3]))/(time_current - self.time_previous)
+        self.base_vel = self.alpha_vel*vel_current + (1-self.alpha_vel)*copy.deepcopy(self.base_vel)
+        self.position_previous = js_msg.position[:3]
+        self.time_previous = copy.deepcopy(time_current)
+        return list(self.base_vel)
+        
 
     def callback_kinova_state(self, msg):
         self.kinova_act_state = msg
