@@ -47,9 +47,7 @@ catkin_install_python(PROGRAMS
   scripts/kinova_driver.py
   scripts/dinova_state_publisher.py
   scripts/dingo_state_publisher.py
-  scripts/test.py
   scripts/generate_fk.py
-  scripts/example_fk.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
