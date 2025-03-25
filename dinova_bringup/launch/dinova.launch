@@ -11,10 +11,14 @@
     <arg name="lidar" default="false"/>
     <arg name="vicon" default="true" />
     <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
-    
+    <arg name="root_link" default="base_link"/>
+    <arg name="end_link" default="arm_tool_frame"/>
+
     <group ns="$(env ROBOT_NAME)">
         <param name="lidar" value="$(arg lidar)" />
         <param name="robot_name" value="$(env ROBOT_NAME)" />
+        <param name="root_link" value="$(arg root_link)" />
+        <param name="end_link" value="$(arg end_link)" />
 
         <!-- Vicon -->
         <param name="vicon/use_vicon" type="bool" value="$(arg vicon)" />
@@ -92,7 +96,13 @@
             <include file="$(find dinova_bringup)/launch/vicon.launch"/>
 	        <node pkg="tf" type="static_transform_publisher" name="$(env ROBOT_NAME)_static_tf" args="0 0 0 0 0 0 $(env ROBOT_NAME) $(env ROBOT_NAME)/base_link 0.1" />
         </group>
-    
+
+        <group if="$(arg lidar)">
+            <param name="dinova_fk_description" textfile="$(find dinova_control)/config/dinova_lidar.urdf"/>
+        </group>
+        <group unless="$(arg lidar)">
+            <param name="dinova_fk_description" textfile="$(find dinova_control)/config/dinova.urdf"/>
+        </group>
     </group>
 
     <!-- <group if="$(arg lidar)">

@@ -9,22 +9,17 @@ import tf
 from geometry_msgs.msg import PoseStamped, Pose
 import time
 import copy
+from dinova_control.dinova_fk import FK_Autogen
+import copy
+from scipy.spatial.transform import Rotation as R
+from derived_object_msgs.msg import Object, ObjectArray
+
 
 class DinovaStatePublisher():
     def __init__(self) -> None:
-        self.pub_dinova_state = rospy.Publisher('dinova/joint_states', JointState, queue_size=1)
-        self.pub_dinova_omni_state = rospy.Publisher('dinova/omni_states', JointState, queue_size=1) #TODO
-
-        if rospy.get_param("vicon/use_vicon"):
-            self.pub_dinova_omni_state_vicon = rospy.Publisher('dinova/omni_states_vicon', JointState, queue_size=1) #TODO
-            rospy.Subscriber(rospy.get_param("vicon/dingo_topic"), PoseStamped, self.callback_vicon)
-
-
-        rospy.Subscriber("odometry/filtered", Odometry, self.callback_odometry)
-
-        rospy.Subscriber("joint_states", JointState, self.callback_dingo_state)
-        rospy.Subscriber("kinova/joint_states", JointState, self.callback_kinova_state)
-
+        self._robot_fk_autogen = FK_Autogen(lib_name="libfk_dinova.so")
+        self._end_link  = self._robot_fk_autogen.get_endeffector_name()
+ 
         self.n_dofs_dingo_wheels = 4
         self.n_dofs_dingo_omni = 3
         self.n_dofs_kinova = 6
@@ -39,6 +34,26 @@ class DinovaStatePublisher():
         self.base_vel = np.array([0., 0., 0.])
         self.position_previous = []
         self.alpha_vel = 0.5 # for filtering velocities from vicon
+
+        self.establish_ros_connections()
+
+    def establish_ros_connections(self):
+        self.pub_dinova_state = rospy.Publisher('dinova/joint_states', JointState, queue_size=1)
+        self.pub_dinova_omni_state = rospy.Publisher('dinova/omni_states', JointState, queue_size=1) #TODO
+
+        if rospy.get_param("vicon/use_vicon"):
+            self.pub_dinova_omni_state_vicon = rospy.Publisher('dinova/omni_states_vicon', JointState, queue_size=1) #TODO
+            rospy.Subscriber(rospy.get_param("vicon/dingo_topic"), PoseStamped, self.callback_vicon)
+
+
+        self.pub_robot_fk = rospy.Publisher('dinova/fk_links', ObjectArray, queue_size=1)
+        self.pub_robot_endeffector_fk = rospy.Publisher('dinova/fk_endeffector', PoseStamped, queue_size=1)
+
+        rospy.Subscriber("odometry/filtered", Odometry, self.callback_odometry)
+
+        rospy.Subscriber("joint_states", JointState, self.callback_dingo_state)
+        rospy.Subscriber("kinova/joint_states", JointState, self.callback_kinova_state)
+
     
     def callback_vicon(self, msg):
         theta = tf.transformations.euler_from_quaternion([msg.pose.orientation.x,
@@ -78,6 +93,15 @@ class DinovaStatePublisher():
             js_msg.position.append(self.kinova_act_state.position[i])
             js_msg.velocity.append(self.kinova_act_state.velocity[i])
             js_msg.effort.append(self.kinova_act_state.effort[i])
+
+
+        
+        # Publish FK without the gripper
+        q_act = np.asarray(copy.deepcopy(js_msg.position))
+        pose_W_dict = self._robot_fk_autogen.compute_fk(q_act)
+        self.publish_FK_endeffector(pose_W_dict)
+        self.publish_FK_links(pose_W_dict)
+
         # Gripper state
         name = "right_finger_bottom_joint"
         js_msg.name.append(name)
@@ -114,13 +138,36 @@ class DinovaStatePublisher():
             js_msg.position.append(self.kinova_act_state.position[i])
             js_msg.velocity.append(self.kinova_act_state.velocity[i])
             js_msg.effort.append(self.kinova_act_state.effort[i])
+
         # Gripper state
         name = "right_finger_bottom_joint"
         js_msg.name.append(name)
         js_msg.position.append(self.kinova_act_state.position[-1])
         js_msg.velocity.append(self.kinova_act_state.velocity[-1])
         js_msg.effort.append(self.kinova_act_state.effort[-1])
+
         self.pub_dinova_state.publish(js_msg)
+
+    def publish_FK_endeffector(self, pose_W_dict: dict):
+        pose_W_EEF = pose_W_dict[self._end_link]
+        endeffector_pose = PoseStamped()
+        endeffector_pose.header.frame_id = self._end_link
+        endeffector_pose.pose = pose_W_EEF
+        
+        self.pub_robot_endeffector_fk.publish(endeffector_pose)
+
+    def publish_FK_links(self, pose_W_dict: dict):
+        object_array = ObjectArray()
+        object_array.header.stamp = rospy.Time.now()
+        for link_name, transf in pose_W_dict.items():
+            obj = Object()
+            obj.header = copy.deepcopy(object_array.header)
+            obj.header.frame_id = link_name
+            obj.pose = transf
+            object_array.objects.append(obj)
+        self.pub_robot_fk.publish(object_array)
+            
+
 
     def publish_omni_dinova_state(self, msg):
         js_msg = JointState()
