@@ -4,7 +4,9 @@
     <xacro:arg name="load_gripper" default="true"/>
     <xacro:arg name="dingo_real_urdf" default="true"/>
     <xacro:arg name="lidar" default="true"/>
+    <xacro:arg name="robot_name" default="dingo1"/>
 
+    <xacro:property name="robot_name" value="$(arg robot_name)"/>
     <xacro:property name="platform_height" value="0.279" />
 
     <!-- Add dingo -->
@@ -25,8 +27,16 @@
 
 
     <!-- Add kinova -->
-    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
-    <xacro:kinova prefix="$(arg robot_id)"/>
+    <xacro:if value="${robot_name == 'dingo1'}">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova1_macro.xacro"/>
+        <xacro:kinova prefix="${robot_id}"/>
+    </xacro:if>
+
+    <xacro:if value="${robot_name == 'dingo2'}">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova2_macro.xacro"/>
+        <xacro:kinova prefix="$(arg robot_id)"/>
+    </xacro:if>
+   
 
 
     <!-- Add kinova gripper -->

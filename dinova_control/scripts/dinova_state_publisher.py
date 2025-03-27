@@ -16,8 +16,8 @@ from derived_object_msgs.msg import Object, ObjectArray
 
 
 class DinovaStatePublisher():
-    def __init__(self) -> None:
-        self._robot_fk_autogen = FK_Autogen(lib_name="libfk_dinova.so")
+    def __init__(self, lib_name) -> None:
+        self._robot_fk_autogen = FK_Autogen(lib_name)
         self._end_link  = self._robot_fk_autogen.get_endeffector_name()
  
         self.n_dofs_dingo_wheels = 4
@@ -96,24 +96,9 @@ class DinovaStatePublisher():
 
         
         # Publish FK
-        T_W_vicon = np.eye(4)
-        T_W_vicon[:3,3] = [0.0,
-                           0.0,
-                           msg.pose.position.z]
-        # T_W_vicon[:3,:3] = R.from_quat([msg.pose.orientation.x,
-        #                                 msg.pose.orientation.y,
-        #                                 msg.pose.orientation.z,
-        #                                 msg.pose.orientation.w]).as_matrix()
-        R_theta = np.array([
-            [np.cos(theta), -np.sin(theta), 0], 
-            [np.sin(theta), np.cos(theta),  0],
-            [0,             0,              1] 
-        ])
-        T_W_vicon[:3,:3] = T_W_vicon[:3,:3] #@ np.linalg.inv(R_theta)
         z_floor_compensation = msg.pose.position.z
         q_act = np.asarray(copy.deepcopy(js_msg.position))
-        # pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_floor_compensation)
-        pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_compensation=0.0, T_W_vicon=T_W_vicon)
+        pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_floor_compensation)
 
         if abs(z_floor_compensation) > 5.0:
             rospy.logwarn("The z-error caused by floor is higher than 5cm. Reconsider calibrating vicon or markers")
@@ -276,5 +261,5 @@ class DinovaStatePublisher():
 if __name__ == "__main__":
     # Ros initialization
     rospy.init_node("dinova_state_publisher")
-    dinova_state = DinovaStatePublisher()
+    dinova_state = DinovaStatePublisher(lib_name=rospy.get_param("fk_library"))
     rospy.spin()

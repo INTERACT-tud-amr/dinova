@@ -10,8 +10,9 @@ import os
 import shutil
 
 class RobotModel():
-    def __init__(self, robot_urdf:str, root_link:str, end_link:str, lidar:bool):
+    def __init__(self, robot_urdf:str, robot_name:str, root_link:str, end_link:str, lidar:bool):
         self._lidar = lidar
+        self._robot_name = robot_name
         self._load_model(robot_urdf, root_link, end_link)
 
     def _load_model(self, robot_urdf:str, root_link:str, end_link:str):
@@ -42,9 +43,9 @@ class RobotModel():
         fk_casadi_funct = ca.Function('fk_func', [q_ca], fk_casadi) 
         
         if self._lidar:
-            FK_FILE_NAME = "fk_dinova_lidar.cpp" 
+            FK_FILE_NAME = "fk_" + self._robot_name + "_dinova_lidar.cpp" 
         else:
-            FK_FILE_NAME = "fk_dinova.cpp"
+            FK_FILE_NAME = "fk_" + self._robot_name + "_dinova.cpp"
         gen = ca.CodeGenerator(FK_FILE_NAME)
         gen.add(fk_casadi_funct)
         gen.generate()
@@ -63,6 +64,7 @@ if __name__ == "__main__":
     # Ros initialization
     rospy.init_node("generate_fk")
     robot = RobotModel(robot_urdf = rospy.get_param("dinova_fk_description"),
+                       robot_name = rospy.get_param("robot_name"),
                        root_link = rospy.get_param("root_link"),
                        end_link = rospy.get_param("end_link"),
                        lidar = rospy.get_param("lidar"))

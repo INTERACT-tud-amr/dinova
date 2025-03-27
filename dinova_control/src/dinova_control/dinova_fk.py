@@ -76,8 +76,6 @@ class FK_Autogen():
         T_W_links = self._compute_fk(q)
 
         T_W_dict = {}
-        print(T_W_vicon)
-
         if T_W_vicon is not None:
             for idx, T_link in enumerate(T_W_links):
                 T_W_link_compen = np.dot(T_W_vicon, T_link)
