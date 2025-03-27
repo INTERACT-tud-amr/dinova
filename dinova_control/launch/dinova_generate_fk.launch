@@ -1,0 +1,24 @@
+<launch>
+    <arg name="lidar" default="false"/>
+    <arg name="root_link" default="base_link"/>
+    <arg name="end_link" default="arm_tool_frame"/>
+    <arg name="robot_name" default="$(env ROBOT_NAME)"/>
+
+    <param name="robot_name" value="$(arg robot_name)" />
+    <param name="root_link" value="$(arg root_link)" />
+    <param name="end_link" value="$(arg end_link)" />
+    <param name="lidar" value="$(arg lidar)"/>
+
+    <group if="$(arg lidar)">
+        <param name="dinova_fk_description" textfile="$(find dinova_control)/config/$(env ROBOT_NAME)_dinova_lidar.urdf"/>
+    </group>
+    <group unless="$(arg lidar)">
+        <param name="dinova_fk_description" textfile="$(find dinova_control)/config/$(env ROBOT_NAME)_dinova.urdf"/>
+    </group>
+    
+
+    
+    
+    <node pkg="dinova_control" type="generate_fk.py" name="generate_fk" output="screen"/>
+
+</launch>

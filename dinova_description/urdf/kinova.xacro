@@ -3,10 +3,20 @@
 
     <xacro:arg name="arm_id" default="" />
     <xacro:arg name="load_gripper" default="true"/>
+    <xacro:arg name="robot_name" default="dingo1"/>
+
+    <xacro:property name="robot_name" value="$(arg robot_name)"/>
 
     <!-- Add kinova -->
-    <xacro:include filename="$(find dinova_description)/urdf/kinova_macro.xacro"/>
-    <xacro:kinova prefix="$(arg arm_id)"/>
+    <xacro:if value="${robot_name == 'dingo1'}">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova1_macro.xacro"/>
+        <xacro:kinova prefix="${arm_id}"/>
+    </xacro:if>
+
+    <xacro:if value="${robot_name == 'dingo2'}">
+        <xacro:include filename="$(find dinova_description)/urdf/kinova2_macro.xacro"/>
+        <xacro:kinova prefix="$(arg arm_id)"/>
+    </xacro:if>
 
     <!-- Add kinova gripper -->
     <xacro:if value="$(arg load_gripper)">

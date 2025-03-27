@@ -9,7 +9,9 @@
         <param name="vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
 
         <!-- Robot model -->
-        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro'"/>
+        <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro' 
+            robot_name:=$(env ROBOT_NAME)"
+        />
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
             <remap from="joint_states" to="kinova/joint_states" />
             <param name="tf_prefix" value="$(env ROBOT_NAME)"/>
