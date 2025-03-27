@@ -80,7 +80,6 @@ class DinovaStatePublisher():
         js_msg.effort.append(0.0)
         # omni_joint_theta
         js_msg.name.append("omni_joint_theta")
-    
         js_msg.position.append(theta)
         js_msg.velocity.append(self.dingo_base_state.velocity[2])
         js_msg.effort.append(0.0)
@@ -98,6 +97,7 @@ class DinovaStatePublisher():
         
         # Publish FK without the gripper
         q_act = np.asarray(copy.deepcopy(js_msg.position))
+        print(q_act)
         pose_W_dict = self._robot_fk_autogen.compute_fk(q_act)
         self.publish_FK_endeffector(pose_W_dict)
         self.publish_FK_links(pose_W_dict)
