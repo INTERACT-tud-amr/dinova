@@ -162,7 +162,7 @@
     <!-- ================= -->
     <!-- Joint 1 -->
     <joint name="${prefix}joint_1" type="revolute">
-        <origin xyz="0 0 0.12825" rpy="0 0 0" />
+        <origin rpy="-2.746893142615157e-05 -0.0012876966269176834 -3.4078623335807743e-16" xyz="-1.8836019394079857e-16 -3.688218839160853e-17 0.12825000000000078" />
         <parent link="${prefix}kinova_base_link" />
         <child link="${prefix}shoulder_link" />
         <axis xyz="0 0 1" />
@@ -170,7 +170,7 @@
     </joint>
     <!-- Joint 2 -->
     <joint name="${prefix}joint_2" type="revolute">
-        <origin xyz="0 -0.03 0.115" rpy="1.5708 0 0" />
+        <origin rpy="1.581263130895373 0.015120261949270858 1.5164839538784716e-05" xyz="-0.0005014484308504022 -0.029343454485041668 0.11500000000000155" />
         <parent link="${prefix}shoulder_link" />
         <child link="${prefix}arm_link" />
         <axis xyz="0 0 1" />
@@ -178,7 +178,7 @@
     </joint>
     <!-- Joint 3 -->
     <joint name="${prefix}joint_3" type="revolute">
-        <origin xyz="0 0.28 0" rpy="-3.1416 0 0" />
+        <origin rpy="-3.1460688147415032 -0.013928343995075362 -0.01397495853756151" xyz="0.004095913096920563 0.28293673179772627 -0.0006561462132585497" />
         <parent link="${prefix}arm_link" />
         <child link="${prefix}forearm_link" />
         <axis xyz="0 0 1" />
@@ -186,7 +186,7 @@
     </joint>
     <!-- Joint 4 -->
     <joint name="${prefix}joint_4" type="revolute">
-        <origin xyz="0 -0.14 0.02" rpy="1.5708 0 0" />
+        <origin rpy="1.570135251499924 0.00020755089686141798 0.013771183766511014" xyz="0.001465691695560486 -0.1409451077317066 0.020698873181334607" />
         <parent link="${prefix}forearm_link" />
         <child link="${prefix}lower_wrist_link" />
         <axis xyz="0 0 1" />
@@ -194,7 +194,7 @@
     </joint>
     <!-- Joint 5 -->
     <joint name="${prefix}joint_5" type="revolute">
-        <origin xyz="0.0285 0 0.105" rpy="0 1.5708 0" />
+        <origin rpy="0.00016848106903807688 1.566674528420962 -0.0001763473975477907" xyz="0.028307136985665976 -0.0007740663723995084 0.1059664426831494" />
         <parent link="${prefix}lower_wrist_link" />
         <child link="${prefix}upper_wrist_link" />
         <axis xyz="0 0 1" />
@@ -202,7 +202,7 @@
     </joint>
     <!-- Joint 6 -->
     <joint name="${prefix}joint_6" type="revolute">
-        <origin xyz="-0.105 0 0.0285" rpy="0 -1.5708 0" />
+        <origin rpy="-0.0016434779097823941 -1.5685481245804054 -0.0016434820817590162" xyz="-0.111504270439627 0.002536337273228278 0.02831137395835149" />
         <parent link="${prefix}upper_wrist_link" />
         <child link="${prefix}end_effector_link" />
         <axis xyz="0 0 1" />
@@ -221,7 +221,7 @@
     </joint>
     <!-- Tool frame used by the arm -->
    <joint name="${prefix}tool_frame_joint" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0.130"/>
+        <origin rpy="0 0 0" xyz="0 0 0.07"/>
         <parent link="${prefix}dummy_link"/>
         <child link="${prefix}tool_frame"/>
         <axis xyz="0 0 0"/>

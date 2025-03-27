@@ -95,10 +95,29 @@ class DinovaStatePublisher():
 
 
         
-        # Publish FK without the gripper
+        # Publish FK
+        T_W_vicon = np.eye(4)
+        T_W_vicon[:3,3] = [0.0,
+                           0.0,
+                           msg.pose.position.z]
+        # T_W_vicon[:3,:3] = R.from_quat([msg.pose.orientation.x,
+        #                                 msg.pose.orientation.y,
+        #                                 msg.pose.orientation.z,
+        #                                 msg.pose.orientation.w]).as_matrix()
+        R_theta = np.array([
+            [np.cos(theta), -np.sin(theta), 0], 
+            [np.sin(theta), np.cos(theta),  0],
+            [0,             0,              1] 
+        ])
+        T_W_vicon[:3,:3] = T_W_vicon[:3,:3] #@ np.linalg.inv(R_theta)
+        z_floor_compensation = msg.pose.position.z
         q_act = np.asarray(copy.deepcopy(js_msg.position))
-        print(q_act)
-        pose_W_dict = self._robot_fk_autogen.compute_fk(q_act)
+        # pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_floor_compensation)
+        pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_compensation=0.0, T_W_vicon=T_W_vicon)
+
+        if abs(z_floor_compensation) > 5.0:
+            rospy.logwarn("The z-error caused by floor is higher than 5cm. Reconsider calibrating vicon or markers")
+
         self.publish_FK_endeffector(pose_W_dict)
         self.publish_FK_links(pose_W_dict)
 

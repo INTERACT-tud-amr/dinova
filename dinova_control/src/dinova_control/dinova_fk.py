@@ -72,21 +72,37 @@ class FK_Autogen():
         self._setting_1 = self._setting_1.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
         return lib
 
-    def compute_fk(self, q:np.array) -> dict:
+    def compute_fk(self, q:np.array, z_compensation=0.0, T_W_vicon=None) -> dict:
         T_W_links = self._compute_fk(q)
-        
+
         T_W_dict = {}
-        for idx, transf in enumerate(T_W_links):
-            link_pose = Pose()
-            link_pose.position.x = transf[0,3]
-            link_pose.position.y = transf[1,3]
-            link_pose.position.z = transf[2,3]
-            quat = R.from_matrix(transf[:3, :3]).as_quat()
-            link_pose.orientation.x = quat[0]
-            link_pose.orientation.y = quat[1]
-            link_pose.orientation.z = quat[2]
-            link_pose.orientation.w = quat[3]
-            T_W_dict[self._link_names[idx]] = link_pose
+        print(T_W_vicon)
+
+        if T_W_vicon is not None:
+            for idx, T_link in enumerate(T_W_links):
+                T_W_link_compen = np.dot(T_W_vicon, T_link)
+                link_pose = Pose()
+                link_pose.position.x = T_W_link_compen[0,3]
+                link_pose.position.y = T_W_link_compen[1,3]
+                link_pose.position.z = T_W_link_compen[2,3] + z_compensation
+                quat = R.from_matrix(T_W_link_compen[:3, :3]).as_quat()
+                link_pose.orientation.x = quat[0]
+                link_pose.orientation.y = quat[1]
+                link_pose.orientation.z = quat[2]
+                link_pose.orientation.w = quat[3]
+                T_W_dict[self._link_names[idx]] = link_pose
+        else:
+            for idx, T_link in enumerate(T_W_links):
+                link_pose = Pose()
+                link_pose.position.x = T_link[0,3]
+                link_pose.position.y = T_link[1,3]
+                link_pose.position.z = T_link[2,3] + z_compensation
+                quat = R.from_matrix(T_link[:3, :3]).as_quat()
+                link_pose.orientation.x = quat[0]
+                link_pose.orientation.y = quat[1]
+                link_pose.orientation.z = quat[2]
+                link_pose.orientation.w = quat[3]
+                T_W_dict[self._link_names[idx]] = link_pose
 
         return T_W_dict
 
