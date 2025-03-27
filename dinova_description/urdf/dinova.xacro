@@ -29,7 +29,7 @@
     <!-- Add kinova -->
     <xacro:if value="${robot_name == 'dingo1'}">
         <xacro:include filename="$(find dinova_description)/urdf/kinova1_macro.xacro"/>
-        <xacro:kinova prefix="${robot_id}"/>
+        <xacro:kinova prefix="$(arg robot_id)"/>
     </xacro:if>
 
     <xacro:if value="${robot_name == 'dingo2'}">
