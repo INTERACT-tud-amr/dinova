@@ -13,13 +13,14 @@
     <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
     <arg name="root_link" default="base_link"/>
     <arg name="end_link" default="arm_tool_frame"/>
-    
+    <arg name="robot_type" default="dinova"/>
 
     <group ns="$(env ROBOT_NAME)">
         <param name="lidar" value="$(arg lidar)" />
         <param name="robot_name" value="$(env ROBOT_NAME)" />
         <param name="root_link" value="$(arg root_link)" />
         <param name="end_link" value="$(arg end_link)" />
+        <param name="robot_type" value="$(arg robot_type)" />
 
         <!-- Vicon -->
         <param name="vicon/use_vicon" type="bool" value="$(arg vicon)" />

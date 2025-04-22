@@ -3,10 +3,16 @@
     <!-- Vicon -->
     <arg name="vicon" default="false" />
     <arg name="vicon_config_file" default="$(find dinova_bringup)/config/vicon_$(env ROBOT_NAME).yaml"/>
+    <arg name="root_link" default="arm_base_link"/>
+    <arg name="end_link" default="arm_tool_frame"/>
+    <arg name="robot_type" default="kinova"/>
 
     <group ns="$(env ROBOT_NAME)">      
         <param name="vicon/use_vicon" type="bool" value="$(arg vicon)" />
         <param name="vicon/dingo_topic" type="string" value="/vicon/$(env ROBOT_NAME)" />
+        <param name="root_link" value="$(arg root_link)" />
+        <param name="end_link" value="$(arg end_link)" />
+        <param name="robot_type" value="$(arg robot_type)" />
 
         <!-- Robot model -->
         <param name="robot_description" command="$(find xacro)/xacro '$(find dinova_description)/urdf/kinova.xacro' 
@@ -22,6 +28,8 @@
 
 
         <rosparam command="load" file="$(find dinova_control)/config/config.yaml" />
+        <param name="dinova_fk_description" textfile="$(find dinova_control)/config/$(env ROBOT_NAME)_dinova.urdf"/>
+        <param name="fk_library" value="libfk_$(env ROBOT_NAME)_kinova.so" />
         <node name="kinova_driver" pkg="dinova_control" type="kinova_driver.py" args="" output="screen"/>
 
         <!-- Vicon Nodes -->

@@ -5,10 +5,13 @@ from threading import Thread
 import time
 import sys
 import numpy as np
-
+import copy
 from dinova_control.kinova_client import KinovaRobot
 from dinova_control.utilities import DeviceConnection
 from dinova_control.state import State
+from dinova_control.dinova_fk import FK_Autogen
+from geometry_msgs.msg import PoseStamped, Pose
+from derived_object_msgs.msg import Object, ObjectArray
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray, Float64, Bool, Int32, Empty
@@ -21,8 +24,9 @@ PUBLISH_RATE = 40 #Hz
 
 class ControlInterface():
     """A node that starts the control interface of the robot."""
-    def __init__(self, mode="HLC_velocity") -> None:
+    def __init__(self, mode="HLC_velocity", lib_name=None, robot_type="dinova") -> None:
         self.mode = mode
+        self.robot_type = robot_type
 
         self.pub_feedback = rospy.Publisher('kinova/joint_states', JointState, queue_size=10)
         rospy.Subscriber("kinova/command", Float64MultiArray, self.callback_command)
@@ -49,6 +53,12 @@ class ControlInterface():
         rospy.Service("kinova/gripper/open", Trigger, self.handle_gripper_open)
         rospy.Service("kinova/gripper/close", Trigger, self.handle_gripper_close)
 
+        # forward kinematics publishing
+        if self.robot_type == "kinova":
+            self._robot_fk_autogen = FK_Autogen(lib_name)
+            self._end_link  = self._robot_fk_autogen.get_endeffector_name()
+            self.pub_robot_fk = rospy.Publisher('kinova/fk_links', ObjectArray, queue_size=1)
+            self.pub_robot_endeffector_fk = rospy.Publisher('kinova/fk_endeffector', PoseStamped, queue_size=1)
 
         self.state = State()
         self.different_command_active = False
@@ -86,6 +96,13 @@ class ControlInterface():
                 self.kinova.set_high_level_velocity(self.state.kinova_command.dq)
                 
             self.publish_feedback()
+            
+            # poses via forward kinematics published:
+            if self.robot_type == "kinova":
+                q_act = np.asarray(copy.deepcopy(self.state.kinova_feedback.q))
+                pose_W_dict = self._robot_fk_autogen.compute_fk(q_act)
+                self.publish_FK_endeffector(pose_W_dict=pose_W_dict)
+                self.publish_FK_links(pose_W_dict=pose_W_dict)
          
             rate.sleep()
 
@@ -111,7 +128,26 @@ class ControlInterface():
         js_msg.velocity.append(0.0)
         js_msg.effort.append(0.0)
 
-        self.pub_feedback.publish(js_msg)        
+        self.pub_feedback.publish(js_msg)   
+        
+    def publish_FK_endeffector(self, pose_W_dict: dict):
+        pose_W_EEF = pose_W_dict[self._end_link]
+        endeffector_pose = PoseStamped()
+        endeffector_pose.header.frame_id = self._end_link
+        endeffector_pose.pose = pose_W_EEF
+        
+        self.pub_robot_endeffector_fk.publish(endeffector_pose)
+
+    def publish_FK_links(self, pose_W_dict: dict):
+        object_array = ObjectArray()
+        object_array.header.stamp = rospy.Time.now()
+        for link_name, transf in pose_W_dict.items():
+            obj = Object()
+            obj.header = copy.deepcopy(object_array.header)
+            obj.header.frame_id = link_name
+            obj.pose = transf
+            object_array.objects.append(obj)
+        self.pub_robot_fk.publish(object_array)     
 
     def callback_command(self, msg):
         if not self.emergency_switch_pressed:
@@ -224,4 +260,4 @@ if __name__ == "__main__":
     # Ros initialization
     rospy.init_node("kinova_driver")
 
-    kinova_driver = ControlInterface("HLC_velocity")
+    kinova_driver = ControlInterface(mode="HLC_velocity", lib_name=rospy.get_param("fk_library"), robot_type=rospy.get_param("robot_type"))
