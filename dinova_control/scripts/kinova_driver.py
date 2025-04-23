@@ -54,6 +54,8 @@ class ControlInterface():
         rospy.Service("kinova/gripper/close", Trigger, self.handle_gripper_close)
 
         # forward kinematics publishing
+        print("self.robot_type: ", self.robot_type)
+        exit()
         if self.robot_type == "kinova":
             self._robot_fk_autogen = FK_Autogen(lib_name)
             self._end_link  = self._robot_fk_autogen.get_endeffector_name()

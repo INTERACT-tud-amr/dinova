@@ -13,6 +13,7 @@ from dinova_control.dinova_fk import FK_Autogen
 import copy
 from scipy.spatial.transform import Rotation as R
 from derived_object_msgs.msg import Object, ObjectArray
+from std_msgs.msg import Float64
 
 
 class DinovaStatePublisher():
@@ -48,6 +49,7 @@ class DinovaStatePublisher():
 
         self.pub_robot_fk = rospy.Publisher('dinova/fk_links', ObjectArray, queue_size=1)
         self.pub_robot_endeffector_fk = rospy.Publisher('dinova/fk_endeffector', PoseStamped, queue_size=1)
+        self.pub_z_compensation = rospy.Publisher('dinova/z_compensation', Float64, queue_size=1)
 
         rospy.Subscriber("odometry/filtered", Odometry, self.callback_odometry)
 
@@ -100,11 +102,16 @@ class DinovaStatePublisher():
         q_act = np.asarray(copy.deepcopy(js_msg.position))
         pose_W_dict = self._robot_fk_autogen.compute_fk(q_act, z_floor_compensation)
 
-        if abs(z_floor_compensation) > 5.0:
+        if abs(z_floor_compensation) > 0.05:
             rospy.logwarn("The z-error caused by floor is higher than 5cm. Reconsider calibrating vicon or markers")
 
         self.publish_FK_endeffector(pose_W_dict)
         self.publish_FK_links(pose_W_dict)
+        
+        #publish z_compensation
+        z_floor_compensation_msg = Float64()
+        z_floor_compensation_msg.data = z_floor_compensation
+        self.pub_z_compensation.publish(z_floor_compensation_msg)
 
         # Gripper state
         name = "right_finger_bottom_joint"
