@@ -59,6 +59,7 @@
     <!-- Spawn model in Gazebo -->
     <node name="model_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
           output="screen" args="-param robot_description -urdf -model dinova $(arg initial_joint_positions)"/>
+    <param name="/$(env ROBOT_NAME)/dinova_fk_description" textfile="$(find dinova_control)/config/dingo1_dinova.urdf"/>
 
     <!-- Load joint controller configurations from YAML file to parameter server -->
     <rosparam file="$(find dinova_gazebo)/config/gazebo_controllers.yaml" command="load"/>
