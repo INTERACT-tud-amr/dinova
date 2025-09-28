@@ -52,7 +52,7 @@
         <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-500" soft_upper_limit="500"/>
         <parent link="${prefix}base_link"/>
         <child link="${prefix}base_link_x"/>
-        <origin rpy="0 0 0" xyz="0 0 0.0"/>
+        <origin rpy="0 0 0" xyz="0 0 0.03"/>
         <axis xyz="1 0 0"/>
         <dynamics damping="100.0"/>
         <limit effort="1000" lower="-10" upper="10" velocity="2" stiffness="1000"/>
