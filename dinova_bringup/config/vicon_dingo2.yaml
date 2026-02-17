@@ -7,7 +7,13 @@ object_names:
   - "cup2"
   - "wineglass"
   - "dynamic_object2"
+  - "armshoulder"
+  - "armwrist"
+  - "armelbow"
 object_msg_types: # "geometry_msgs/{PoseStamped,TransformStamped,PoseWithCovarianceStamped}"
+  - "geometry_msgs/PoseStamped"
+  - "geometry_msgs/PoseStamped"
+  - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
   - "geometry_msgs/PoseStamped"
@@ -25,7 +31,13 @@ object_frame_ids:
   - "map"
   - "map"
   - "map"
+  - "map"
+  - "map"
+  - "map"
 object_frequency_divider:
+  - 2
+  - 2
+  - 2
   - 2
   - 2
   - 2
@@ -43,3 +55,6 @@ object_publish_topics:
   - "/vicon/cup2"
   - "/vicon/wineglass"
   - "/vicon/dynamic_object2"
+  - "/vicon/armshoulder"
+  - "/vicon/armwrist"
+  - "/vicon/armelbow"
