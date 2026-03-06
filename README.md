@@ -1,6 +1,12 @@
 # Dinova
 ROS software stack for Dinova (dingo + kinova). 
 
+## Requirements installation via pip
+```bash
+    pip install -r requirements.txt
+```
+The only dependency is forwardkinematics, this is needed to provide the link names and number of links for the topics corresponding to the forward kinematics of the robot. In addition, if you want to re-generate the cpp-based FK files, this package needs to be used within *roslaunch dinova_generate_fk.launch*.
+
 ## Running a real robot
 Turn off default ros packages by Clearpath
 ``` bash
