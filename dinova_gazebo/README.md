@@ -63,5 +63,15 @@ To control position of the gripper's right finger send command to:
 1. `/dinova/omni_states` -> Contains state of the omnibase and arm. Same topic as with the real robot as well. This is only published with `dinova`.
 2. `/kinova/joint_states` -> Contains state of the arm. Same topic as with the real robot as well. This is only published with `kinova`.
 
+## Miscellaneous 
+### Obstacle spawning service
+To spawn spherical obstacles in gazebo while also advertising to /dinova/objects, e.g., such that the fabrics controller accounts for them, you can use the service:
+``` bash
+   rosrun dinova_gazebo obstacle_spawn_service.py
+```
 
-
+Example how to call it to spawn two obstacles, but any number can be specified:
+``` bash
+   rosservice call /dinova_gazebo/spawn_obstacles "{x: [2, 3], y: [3, 2], z: [2, 2], radius: [0.5, 0.5]}"
+```
+When you call the service again, all previously spawned obstacles get deleted and the newly specified ones get spawned (given that the service node was running the whole time).

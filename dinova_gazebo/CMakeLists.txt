@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   std_msgs
   geometry_msgs
+  message_generation
+  derived_object_msgs
 )
 find_package(gazebo 11 REQUIRED)
 ## System dependencies are found with CMake's conventions
@@ -23,6 +25,15 @@ find_package(gazebo 11 REQUIRED)
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 catkin_python_setup()
 
+add_service_files(
+  FILES
+  SpawnObstacles.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -34,6 +45,7 @@ catkin_package(
     tf2_ros
     std_msgs
     geometry_msgs
+    message_runtime
 #  DEPENDS system_lib
 )
 
@@ -65,6 +77,7 @@ target_link_libraries(dynamic_obstacle_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRA
 catkin_install_python(PROGRAMS
   scripts/dinova_gazebo_state_publisher.py
   scripts/kinova_gazebo_state_publisher.py
+  scripts/obstacle_spawn_service.py
 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
